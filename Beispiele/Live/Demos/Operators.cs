@@ -1,4 +1,3 @@
-using System.Reactive;
 using System.Reactive.Linq;
 
 namespace Live.Demos
