@@ -30,7 +30,7 @@ namespace Live.Demos
         }
 
         public class SomeEventArgs : EventArgs { }
-        public static event EventHandler<SomeEventArgs> GenericEvent;
+        public static event EventHandler<SomeEventArgs> GenericEvent = null!;
 
         public static IObservable<EventPattern<SomeEventArgs>> FromEventPattern()
         {
