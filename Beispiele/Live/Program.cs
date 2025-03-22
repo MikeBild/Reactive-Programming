@@ -73,7 +73,7 @@ namespace Live
                 onCompleted: () => Console.WriteLine("LoadJSONFromAsync Complete!")
             );
 
-            //CanellationToken
+            //CancellationToken
             var cts = new CancellationTokenSource();
             var observableLoadJSONAsyncResult2 = Async.LoadJSONFromAsync(cts.Token);
 
@@ -89,6 +89,11 @@ namespace Live
             cts.Cancel();
             #endregion
 
+            #region MiniWebServer
+            Console.WriteLine("Start MiniWebServer on http://localhost:8080");
+            await MiniWebServer.Runner.Start();
+            #endregion
+            
             #region Main
             Console.WriteLine("Press enter to exit.");
             Console.ReadLine();
