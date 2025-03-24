@@ -1,5 +1,6 @@
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using Live.Demos;
 using Moq;
 
@@ -8,7 +9,7 @@ namespace Live.Tests
     public class UnitTest_DI_Rx_Moq_HTTP
     {
         [Fact]
-        public void Successful_Result()
+        public async Task Successful_Result()
         {
             // Arrange
             var mock = new Mock<IApiClient>();
@@ -17,7 +18,7 @@ namespace Live.Tests
             mock.Setup(m => m.GetData()).Returns(result);
 
             // Act
-            var data = mock.Object.GetData().ToTask().Result;
+            var data = await mock.Object.GetData().ToTask();
 
             // Assert
             Assert.Equal("MOCK DATA", data);
