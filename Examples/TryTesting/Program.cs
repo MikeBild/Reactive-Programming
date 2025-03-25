@@ -1,0 +1,1 @@
+﻿Console.WriteLine(Calc.Add(1, 2));
