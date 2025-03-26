@@ -9,6 +9,7 @@ namespace TryTodoApp.ViewModels
 {
     public class MainViewModel : ReactiveObject
     {
+        public TodoListViewModel TodoListViewModel { get; set; } = new TodoListViewModel();
         private string _newItem = string.Empty;
 
         private readonly ObservableAsPropertyHelper<bool> _hasItems;
