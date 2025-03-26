@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -29,10 +28,10 @@ namespace TryTodoApp.ViewModels
                 .Select(count => count > 0)
                 .ToProperty(this, x => x.HasItems, out _hasItems);
         }
-
+        
         public MainViewModel(IBusinessDomain domain) : this()
         {
-
+            
         }
 
         private void AddItem()

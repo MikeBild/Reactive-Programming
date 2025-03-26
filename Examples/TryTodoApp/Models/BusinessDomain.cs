@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace TryTodoApp.Models
 {
-
     public class BusinessDomain : IBusinessDomain
     {
         private readonly Dictionary<int, Item> cache = [];
