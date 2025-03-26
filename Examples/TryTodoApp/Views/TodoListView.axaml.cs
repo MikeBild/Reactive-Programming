@@ -6,8 +6,8 @@ namespace TryTodoApp.Views;
 public partial class TodoListView : UserControl
 {
     public TodoListView()
-    {        
-        DataContext = new TodoListViewModel();
+    {
+        DataContext = new TodoListViewModel(Program.Domain);
         InitializeComponent();
     }
 }

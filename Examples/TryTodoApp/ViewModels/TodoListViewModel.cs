@@ -2,6 +2,7 @@ using DynamicData;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
+using TryTodoApp.Models;
 
 namespace TryTodoApp.ViewModels;
 
@@ -24,6 +25,11 @@ public class TodoListViewModel : ReactiveObject, IDisposable
             .DisposeMany()
             .AutoRefresh(p => p.IsCompleted)
             .AsObservableList();
+    }
+
+    public TodoListViewModel(IBusinessDomain domain) : this()
+    {
+        
     }
 
     public void AddTodo(TodoViewModel Todo)

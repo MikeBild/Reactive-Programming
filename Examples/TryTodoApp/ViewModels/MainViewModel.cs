@@ -15,7 +15,7 @@ namespace TryTodoApp.ViewModels
         private readonly ObservableAsPropertyHelper<bool> _hasItems;
         public bool HasItems => _hasItems.Value;
 
-        public ObservableCollection<TodoItem> Items { get; } = [];        
+        public ObservableCollection<TodoViewModel> Items { get; } = [];
 
         public string NewItem { get => _newItem; set => this.RaiseAndSetIfChanged(ref _newItem, value); }
         public ReactiveCommand<Unit, Unit> AddItemCommand { get; }
@@ -30,9 +30,14 @@ namespace TryTodoApp.ViewModels
                 .ToProperty(this, x => x.HasItems, out _hasItems);
         }
 
+        public MainViewModel(IBusinessDomain domain) : this()
+        {
+
+        }
+
         private void AddItem()
         {
-            Items.Add(new TodoItem { IsCompleted = false, Title = NewItem });
+            Items.Add(new TodoViewModel { IsCompleted = false, Title = NewItem });
             NewItem = string.Empty;
         }
     }
