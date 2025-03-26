@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
 using TryTodoApp.Models;
 
@@ -8,14 +9,24 @@ namespace TryTodoApp.ViewModels
 {
     public class MainViewModel : ReactiveObject
     {
-        public ObservableCollection<TodoItem> Items { get; } = [];
         private string _newItem = string.Empty;
+
+        private readonly ObservableAsPropertyHelper<bool> _hasItems;
+        public bool HasItems => _hasItems.Value;
+
+        public ObservableCollection<TodoItem> Items { get; } = [];        
+
         public string NewItem { get => _newItem; set => this.RaiseAndSetIfChanged(ref _newItem, value); }
         public ReactiveCommand<Unit, Unit> AddItemCommand { get; }
 
         public MainViewModel()
         {
-            AddItemCommand = ReactiveCommand.Create(AddItem);
+            var canAddItemExecute = this.WhenAnyValue(x => x.NewItem, x => !string.IsNullOrWhiteSpace(x));
+            AddItemCommand = ReactiveCommand.Create(AddItem, canAddItemExecute);
+
+            this.WhenAnyValue(x => x.Items.Count)
+                .Select(count => count > 0)
+                .ToProperty(this, x => x.HasItems, out _hasItems);
         }
 
         private void AddItem()

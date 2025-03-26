@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+using System.Reactive.Linq;
 using TryTodoApp.ViewModels;
 
 namespace TryTodoApp.Tests;
@@ -8,7 +8,7 @@ namespace TryTodoApp.Tests;
 public class MainViewModelTests
 {
     [Fact]
-    public void Items_Tests()
+    public void Are_items_empty()
     {
         var sut = new MainViewModel();
 
@@ -17,15 +17,25 @@ public class MainViewModelTests
     }
 
     [Fact]
-    public void Items_Add()
+    public void Can_add_item()
     {
         var sut = new MainViewModel();
         sut.NewItem = "Todo 1";
 
         sut.AddItemCommand.Execute().Subscribe();
 
-
         Assert.Single(sut.Items);
         Assert.Equal("Todo 1", sut.Items.First().Title);
+    }
+
+    [Fact]
+    public void Can_not_add_whitespace_item()
+    {
+        var sut = new MainViewModel();
+        sut.NewItem = " ";
+
+        var canExecute = sut.AddItemCommand.CanExecute.FirstAsync().Wait();
+
+        Assert.False(canExecute);
     }
 }
