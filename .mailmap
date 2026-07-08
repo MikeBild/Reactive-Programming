@@ -1,0 +1,15 @@
+# Kanonische Identität für dieses private Projekt.
+#
+# Ein Teil der Historie trägt versehentlich die Arbeits-E-Mail-Adresse
+# (mike.bild@siemens.com). Ursache: fehlerhafte git-Konfiguration auf einem
+# privaten Rechner. Die betroffenen Commits entstanden ausserhalb der
+# Arbeitszeit, auf privater Hardware und ohne Bezug zu Aufgaben des
+# Arbeitgebers. Dieses Projekt ist privat und steht in keinem Zusammenhang
+# mit einer beruflichen Taetigkeit.
+#
+# Die Historie wird bewusst NICHT umgeschrieben. Diese Datei deklariert die
+# Korrektur offen — git log/shortlog und GitHub zeigen die kanonische Adresse.
+
+Mike Bild <mike.bild@gmail.com> <mike.bild@siemens.com>
+Mike Bild <mike.bild@gmail.com> <mike.bild@googlemail.com>
+Mike Bild <mike.bild@gmail.com> <mike.bild@gmail.com>
