@@ -7,7 +7,7 @@ Die Übungen zum Workshop „Reactive Programming mit RxJS“. Zu jeder Lektion 
 - Node.js 26 (`node -v`)
 - Ein Editor mit TypeScript-Unterstützung
 
-Der Stack: TypeScript im strict-Modus, ESM, RxJS 7.8 und Vitest. Zeitabhängige Tests laufen mit dem `TestScheduler` aus `rxjs/testing` auf virtueller Zeit.
+Der Stack: TypeScript im strict-Modus, ESM, RxJS 7.8 und Vitest. Zeitabhängige Tests laufen mit dem `TestScheduler` aus `rxjs/testing` auf virtueller Zeit. Die Lektion `rx-marble-testing` nutzt statt Vitest den eingebauten Test-Runner von Node (`node:test` und `node:assert`), so wie die Lektion es zeigt.
 
 ```sh
 cd rxjs
@@ -29,9 +29,11 @@ Die Tests sind für Startpunkt und Lösung dieselben. `npm run test:solution` l�
 
 | Befehl | Was passiert |
 | --- | --- |
-| `npm test` | Alle Tests gegen deine Startpunkte |
+| `npm test` | Marble Tests (`node --test`) und alle Vitest-Tests gegen deine Startpunkte |
+| `npm run test:marble` | Nur deine Marble Tests aus `rx-marble-testing` mit `node --test` |
+| `npm run test:marble:solution` | Die Marble Tests der Lösung |
 | `npx vitest rx-flattening` | Watch-Modus für eine Lektion |
-| `npm run test:solution` | Alle Tests gegen die Lösungen |
+| `npm run test:solution` | Alle Tests gegen die Lösungen, inklusive Marble Tests |
 | `npm run typecheck` | `tsc --noEmit` über Startpunkte, Lösungen und Tests |
 | `npm run check` | Typecheck und Lösungs-Tests, zum Beispiel vor einem Commit |
 
@@ -54,9 +56,9 @@ Die Reihenfolge folgt der Agenda des Workshops.
 | Fehlerbehandlung | [`exercises/rx-error-handling`](exercises/rx-error-handling) | Drei URLs mit `mergeMap`, `timeout`, `retry` mit Backoff und Fehlerwert per `catchError`. |
 | Subjects und Multicasting | [`exercises/rx-subjects-multicasting`](exercises/rx-subjects-multicasting) | Der Letzte macht das Licht aus: eine WebSocket-Verbindung mit `share` und Ref Counting. Dazu ein `CartStore` mit `BehaviorSubject`. |
 | Zeit und Backpressure | [`exercises/rx-time-backpressure`](exercises/rx-time-backpressure) | Sensor mit tausend Werten pro Sekunde, Live-Wert per `auditTime`, Durchschnitt per `bufferTime`. Demo: `node exercises/rx-time-backpressure/demo.ts` |
-| Marble Testing | [`exercises/rx-marble-testing`](exercises/rx-marble-testing) | Hier schreibst du die Tests: `interval` ohne Mocks und die Suche aus `search.ts` mit Marble-Diagrammen. Startpunkt ist `search.test.ts` mit `test.todo`. |
-| UI-Zustand als Stream | [`exercises/rx-ui-state`](exercises/rx-ui-state) | Todo View Model mit Aktionen und `scan`, dazu die letzten fünf Suchen als LRU-Liste. |
-| Signals und Observables | [`exercises/rx-signals-interop`](exercises/rx-signals-interop) | Zustand als Signal, Suche mit `debounceTime` und `switchMap` als Observable, dazu die Brücken `toObservable` und `toSignal`. |
+| Marble Testing | [`exercises/rx-marble-testing`](exercises/rx-marble-testing) | Hier schreibst du die Tests mit `node:test`, `node:assert` und `TestScheduler`: `interval` ohne Mocks und die Produktsuche aus `search.ts` mit Marble-Diagrammen. Startpunkt ist `search.test.ts` mit `test.todo`, Start mit `npm run test:marble`. |
+| UI-Zustand als Stream | [`exercises/rx-ui-state`](exercises/rx-ui-state) | Warenkorb-View-Model für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
+| Signals und Observables | [`exercises/rx-signals-interop`](exercises/rx-signals-interop) | Warenkorb und Gesamtsumme als Signal, Produktsuche mit `debounceTime` und `switchMap` als Observable, dazu die Brücken `toObservable` und `toSignal`. |
 
 ## Aufbau einer Lektion
 
@@ -68,13 +70,25 @@ exercises/rx-flattening/
     └── index.ts        Lösung mit Begründung im Kommentar
 ```
 
-Manche Lektionen haben Hilfsdateien, die du nicht ändern musst, etwa `fake-socket.ts` oder `signal.ts`. Bei `rx-marble-testing` ist die Aufgabe der Test selbst: Die Lösung liegt in `solution/search.test.ts` und läuft nur mit `npm run test:solution`.
+Manche Lektionen haben Hilfsdateien, die du nicht ändern musst, etwa `fake-socket.ts` oder `signal.ts`. Bei `rx-marble-testing` ist die Aufgabe der Test selbst: Die Lösung liegt in `solution/search.test.ts`.
+
+## Marble Tests mit node:test
+
+`rx-marble-testing` braucht kein Test-Framework. Node 26 führt TypeScript-Dateien direkt aus und bringt mit `node:test` einen Test-Runner mit. Der `TestScheduler` bekommt `deepStrictEqual` aus `node:assert/strict` als Vergleich.
+
+```sh
+npm run test:marble                                            # deine Tests, offene test.todo werden als todo gemeldet
+node --test --watch exercises/rx-marble-testing/search.test.ts # Watch-Modus
+npm run test:marble:solution                                   # die Lösung
+```
+
+Weil Node die Datei ohne Bundler lädt, importierst du lokale Module mit Endung `.ts`, etwa `import { searchResults } from './search.ts'`. Vitest ignoriert diesen Ordner.
 
 ## Testen ohne Mocks
 
 Alle Services kommen als Parameter rein, nicht als Import. Im Test ersetzt sie ein `cold` oder `hot` Observable aus dem `TestScheduler` oder eine kleine Fake-Function. Eine Mock-Library brauchst du nicht.
 
-Nur zwei Lektionen nutzen die Fake Timers von Vitest: `rx-observable-contract` baut bewusst auf `setInterval` und nicht auf einem RxJS-Scheduler auf, und `rx-subscription-cleanup` prüft, dass nach `destroy` kein Timer mehr läuft.
+Die übrigen Lektionen bleiben bei Vitest: Sie lehren kein bestimmtes Test-Werkzeug, die Tests sind dort nur Prüfhilfe. Vitest liefert den Lösungsmodus unten ohne eigenen Loader und die Fake Timers, die zwei Lektionen brauchen: `rx-observable-contract` baut bewusst auf `setInterval` und nicht auf einem RxJS-Scheduler auf, und `rx-subscription-cleanup` prüft, dass nach `destroy` kein Timer mehr läuft.
 
 ## Wie der Lösungsmodus funktioniert
 

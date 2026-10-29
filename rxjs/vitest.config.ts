@@ -26,8 +26,8 @@ export default defineConfig({
   plugins: [useSolution()],
   test: {
     include: ['exercises/**/*.test.ts'],
-    // Tests in solution/ (etwa die Marble Tests aus rx-marble-testing) laufen nur im Lösungsmodus
-    exclude: target === 'solution' ? ['**/node_modules/**'] : ['**/node_modules/**', 'exercises/*/solution/**'],
+    // rx-marble-testing läuft mit node:test (npm run test:marble), nicht mit Vitest
+    exclude: ['**/node_modules/**', 'exercises/*/solution/**', 'exercises/rx-marble-testing/**'],
     testTimeout: 5_000,
   },
 })

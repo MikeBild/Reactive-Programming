@@ -1,6 +1,7 @@
 /**
- * Die Suche, die du in dieser Lektion testest. Sie ist fertig, du schreibst nur die Tests.
- * Quellen und Service kommen als Parameter rein. Deshalb brauchst du keine Mocks.
+ * Die Produktsuche des Werkstatt-Shops, die du in dieser Lektion testest. Sie
+ * ist fertig, du schreibst nur die Tests. Quellen und Service kommen als
+ * Parameter rein. Deshalb brauchst du keine Mocks.
  */
 import { catchError, debounceTime, distinctUntilChanged, map, of, switchMap, type Observable } from 'rxjs'
 

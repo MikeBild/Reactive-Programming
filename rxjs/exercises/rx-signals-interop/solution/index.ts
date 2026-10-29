@@ -1,13 +1,15 @@
 import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs'
-import { signal, type Signal, type WritableSignal } from '../signal.js'
+import { signal, type Signal } from '../signal.js'
 
-export type Todo = { id: string; title: string; done: boolean }
+export type Product = { id: string; name: string; priceCents: number; stock: number }
+export type CartItem = { productId: string; quantity: number; priceCents: number }
 
 /** Signal -> Observable: liefert sofort den aktuellen Wert, danach jede Änderung. */
 export const toObservable = <T>(source: Signal<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
-    subscriber.next(source())
-    return source.subscribe((value) => subscriber.next(value))
+    subscriber.next(source.get())
+    // watch gibt die Abmelde-Function zurück, sie wird zum Teardown
+    return source.watch((value) => subscriber.next(value))
   })
 
 /** Observable -> Signal: das Signal hält immer den letzten Wert, bis unsubscribe. */
@@ -17,39 +19,58 @@ export const toSignal = <T>(source$: Observable<T>, initialValue: T): { value: S
   return { value, unsubscribe: () => subscription.unsubscribe() }
 }
 
-export type TodoSearchViewModel = {
-  todos: Signal<Todo[]>
-  add: (id: string, title: string) => void
-  toggle: (id: string) => void
-  term: WritableSignal<string>
-  results: Signal<Todo[]>
+export type ShopViewModel = {
+  cart: Signal<CartItem[]>
+  totalCents: Signal<number>
+  add: (product: Product) => void
+  remove: (productId: string) => void
+  term: Signal<string>
+  results: Signal<Product[]>
   destroy: () => void
 }
 
-export const createTodoSearchViewModel = (
-  search: (term: string) => Observable<Todo[]>,
+const sumCents = (cart: CartItem[]) => cart.reduce((sum, item) => sum + item.quantity * item.priceCents, 0)
+
+export const createShopViewModel = (
+  searchProducts: (term: string) => Observable<Product[]>,
   debounceMs = 300,
-): TodoSearchViewModel => {
-  // Zustand ohne Zeitlogik: Signal
-  const todos = signal<Todo[]>([])
+): ShopViewModel => {
+  // Zustand mit aktuellem Wert und ohne Zeitlogik: Signals
+  const cart = signal<CartItem[]>([])
+  const totalCents = signal(0)
+  const stopTotal = cart.watch((items) => totalCents.set(sumCents(items)))
   const term = signal('')
 
-  // Zeit, Abbruch und Duplikate: Observable. Das Ergebnis geht als Signal zurück in die UI.
+  // Zeit, Abbruch und Duplikate: Observable. Das Ergebnis geht als Signal mit Startwert zurück.
   const results = toSignal(
     toObservable(term).pipe(
       debounceTime(debounceMs),
       distinctUntilChanged(),
-      switchMap((value) => search(value)),
+      switchMap((value) => searchProducts(value)),
     ),
-    [] as Todo[],
+    [] as Product[],
   )
 
+  const add = (product: Product) => {
+    const items = cart.get()
+    const exists = items.some((item) => item.productId === product.id)
+    cart.set(
+      exists
+        ? items.map((item) => (item.productId === product.id ? { ...item, quantity: item.quantity + 1 } : item))
+        : [...items, { productId: product.id, quantity: 1, priceCents: product.priceCents }],
+    )
+  }
+
   return {
-    todos,
-    add: (id, title) => todos.update((list) => [...list, { id, title, done: false }]),
-    toggle: (id) => todos.update((list) => list.map((t) => (t.id === id ? { ...t, done: !t.done } : t))),
+    cart,
+    totalCents,
+    add,
+    remove: (productId) => cart.set(cart.get().filter((item) => item.productId !== productId)),
     term,
     results: results.value,
-    destroy: results.unsubscribe,
+    destroy: () => {
+      results.unsubscribe()
+      stopTotal()
+    },
   }
 }

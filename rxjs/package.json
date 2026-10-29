@@ -9,10 +9,12 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "node --test exercises/rx-marble-testing/search.test.ts && vitest run",
     "test:watch": "vitest",
-    "test:solution": "RX_TARGET=solution vitest run",
-    "check": "tsc --noEmit && RX_TARGET=solution vitest run"
+    "test:marble": "node --test exercises/rx-marble-testing/search.test.ts",
+    "test:marble:solution": "node --test exercises/rx-marble-testing/solution/search.test.ts",
+    "test:solution": "RX_TARGET=solution vitest run && npm run test:marble:solution",
+    "check": "tsc --noEmit && npm run test:solution"
   },
   "dependencies": {
     "rxjs": "~7.8.2"

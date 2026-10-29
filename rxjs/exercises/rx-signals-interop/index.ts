@@ -1,22 +1,25 @@
 /**
  * Lektion rx-signals-interop: Signals oder Observables?
  *
- * Aufgabe: Nimm das Todo View Model, stell den Zustand als Signal bereit und
- * lass die Suche mit debounceTime und switchMap als Observable laufen.
+ * Aufgabe: Bau ein View Model für den Werkstatt-Shop. Der Warenkorb und seine
+ * Gesamtsumme sind Zustand mit aktuellem Wert, also Signals. Die Produktsuche
+ * braucht Zeit und Abbruch, also läuft sie als Observable mit debounceTime und
+ * switchMap. Das Ergebnis geht als Signal mit Startwert zurück an die Ansicht.
  *
- * Statt Angular nutzt du das kleine Signal aus signal.ts und baust die beiden
- * Brücken selbst, die Angular in @angular/core/rxjs-interop mitbringt:
+ * Statt eines Frameworks nutzt du das kleine Signal aus signal.ts und baust die
+ * beiden Brücken selbst, die Angular in @angular/core/rxjs-interop mitbringt:
  * toObservable und toSignal.
  */
 import { Observable } from 'rxjs'
-import { type Signal, type WritableSignal } from './signal.js'
+import { type Signal } from './signal.js'
 
-export type Todo = { id: string; title: string; done: boolean }
+export type Product = { id: string; name: string; priceCents: number; stock: number }
+export type CartItem = { productId: string; quantity: number; priceCents: number }
 
 /** Signal -> Observable: liefert sofort den aktuellen Wert, danach jede Änderung. */
 export const toObservable = <T>(source: Signal<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
-    // TODO: aktuellen Wert senden, source.subscribe(...) anmelden, beim Teardown abmelden
+    // TODO: aktuellen Wert per source.get() senden, source.watch(...) anmelden, beim Teardown abmelden
     subscriber.error(new Error('TODO: toObservable'))
   })
 
@@ -26,23 +29,28 @@ export const toSignal = <T>(source$: Observable<T>, initialValue: T): { value: S
   throw new Error('TODO: toSignal')
 }
 
-export type TodoSearchViewModel = {
-  /** Zustand als Signal */
-  todos: Signal<Todo[]>
-  add: (id: string, title: string) => void
-  toggle: (id: string) => void
-  /** Eingabe als Signal */
-  term: WritableSignal<string>
+export type ShopViewModel = {
+  /** Warenkorb als Signal */
+  cart: Signal<CartItem[]>
+  /** Gesamtsumme in Cent als Signal, folgt dem Warenkorb */
+  totalCents: Signal<number>
+  /** Legt ein Stück in den Warenkorb, bei vorhandenem Produkt steigt die quantity */
+  add: (product: Product) => void
+  remove: (productId: string) => void
+  /** Eingabe der Produktsuche als Signal */
+  term: Signal<string>
   /** Ergebnis der Suche als Signal, die Zeitlogik dazwischen läuft als Observable */
-  results: Signal<Todo[]>
+  results: Signal<Product[]>
   destroy: () => void
 }
 
-export const createTodoSearchViewModel = (
-  search: (term: string) => Observable<Todo[]>,
+export const createShopViewModel = (
+  searchProducts: (term: string) => Observable<Product[]>,
   debounceMs = 300,
-): TodoSearchViewModel => {
-  // TODO: todos und term als signal
-  // TODO: results = toSignal(toObservable(term).pipe(debounceTime, distinctUntilChanged, switchMap(search)), [])
-  throw new Error('TODO: createTodoSearchViewModel')
+): ShopViewModel => {
+  // TODO: cart, totalCents und term als signal
+  // TODO: cart.watch(...) hält totalCents aktuell: Σ quantity × priceCents
+  // TODO: results = toSignal(toObservable(term).pipe(debounceTime, distinctUntilChanged, switchMap(searchProducts)), [])
+  // TODO: destroy meldet results und den watch-Listener ab
+  throw new Error('TODO: createShopViewModel')
 }

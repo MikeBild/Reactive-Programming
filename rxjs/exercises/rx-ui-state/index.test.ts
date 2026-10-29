@@ -1,25 +1,41 @@
 import { describe, expect, test } from 'vitest'
-import { createTodoViewModel, pushRecent, reduceTodos, type Todo } from './index.js'
+import { createCartViewModel, pushRecent, reduceCart, totalCents, type CartItem, type Product } from './index.js'
 
-const sequentialIds = () => {
-  let next = 0
-  return () => String(++next)
-}
+const bremsscheibe: Product = { id: 'p-1', name: 'Bremsscheibe', priceCents: 4_990, stock: 10 }
+const zuendkerze: Product = { id: 'p-2', name: 'Zündkerze', priceCents: 799, stock: 50 }
 
 const latest = <T>(values: T[]) => values[values.length - 1]
 
 describe('rx-ui-state: Reducer', () => {
-  test('add, toggle und remove ändern die Liste, ohne sie zu mutieren', () => {
-    const empty: Todo[] = []
-    const one = reduceTodos(empty, { type: 'add', id: '1', title: 'Rx lernen' })
-    const toggled = reduceTodos(one, { type: 'toggle', id: '1' })
-    const removed = reduceTodos(toggled, { type: 'remove', id: '1' })
+  test('add und remove ändern den Warenkorb, ohne ihn zu mutieren', () => {
+    const empty: CartItem[] = []
+    const one = reduceCart(empty, { type: 'add', item: { productId: 'p-1', quantity: 1, priceCents: 4_990 } })
+    const two = reduceCart(one, { type: 'add', item: { productId: 'p-2', quantity: 4, priceCents: 799 } })
+    const removed = reduceCart(two, { type: 'remove', productId: 'p-1' })
 
     expect(empty).toEqual([])
-    expect(one).toEqual([{ id: '1', title: 'Rx lernen', done: false }])
-    expect(toggled).toEqual([{ id: '1', title: 'Rx lernen', done: true }])
-    expect(one[0]?.done).toBe(false)
-    expect(removed).toEqual([])
+    expect(one).toEqual([{ productId: 'p-1', quantity: 1, priceCents: 4_990 }])
+    expect(two).toHaveLength(2)
+    expect(removed).toEqual([{ productId: 'p-2', quantity: 4, priceCents: 799 }])
+  })
+
+  test('dasselbe Produkt erhöht die quantity statt eine zweite Position anzulegen', () => {
+    const item = { productId: 'p-1', quantity: 1, priceCents: 4_990 }
+    const once = reduceCart([], { type: 'add', item })
+    const twice = reduceCart(once, { type: 'add', item: { ...item, quantity: 2 } })
+
+    expect(twice).toEqual([{ productId: 'p-1', quantity: 3, priceCents: 4_990 }])
+    expect(once[0]?.quantity).toBe(1)
+  })
+
+  test('totalCents summiert quantity × priceCents in ganzen Cent', () => {
+    expect(totalCents([])).toBe(0)
+    expect(
+      totalCents([
+        { productId: 'p-1', quantity: 2, priceCents: 4_990 },
+        { productId: 'p-2', quantity: 4, priceCents: 799 },
+      ]),
+    ).toBe(13_176)
   })
 
   test('LRU: neueste Suche vorn, Duplikate wandern nach vorn, maximal fünf', () => {
@@ -30,52 +46,64 @@ describe('rx-ui-state: Reducer', () => {
 })
 
 describe('rx-ui-state: View Model', () => {
-  test('todos$ startet leer und folgt den Aktionen', () => {
-    const vm = createTodoViewModel(sequentialIds())
-    const states: Todo[][] = []
-    vm.todos$.subscribe((todos) => states.push(todos))
+  test('cart$ startet leer und folgt den Aktionen', () => {
+    const vm = createCartViewModel()
+    const states: CartItem[][] = []
+    vm.cart$.subscribe((cart) => states.push(cart))
 
-    vm.add('Einkaufen')
-    vm.add('Kochen')
-    vm.toggle('1')
-    vm.remove('2')
+    vm.add(bremsscheibe)
+    vm.add(zuendkerze, 4)
+    vm.add(bremsscheibe)
+    vm.remove('p-2')
 
     expect(states[0]).toEqual([])
-    expect(latest(states)).toEqual([{ id: '1', title: 'Einkaufen', done: true }])
+    expect(latest(states)).toEqual([{ productId: 'p-1', quantity: 2, priceCents: 4_990 }])
   })
 
-  test('openCount$ meldet nur echte Änderungen', () => {
-    const vm = createTodoViewModel(sequentialIds())
-    const counts: number[] = []
-    vm.openCount$.subscribe((count) => counts.push(count))
+  test('totalCents$ meldet nur echte Änderungen', () => {
+    const vm = createCartViewModel()
+    const totals: number[] = []
+    vm.totalCents$.subscribe((total) => totals.push(total))
 
-    vm.add('A')
-    vm.add('B')
-    vm.toggle('1')
-    vm.toggle('99') // gibt es nicht, die Zahl bleibt gleich
+    vm.add(zuendkerze)
+    vm.add(bremsscheibe)
+    vm.remove('p-99') // gibt es nicht, die Summe bleibt gleich
 
-    expect(counts).toEqual([0, 1, 2, 1])
+    expect(totals).toEqual([0, 799, 5_789])
   })
 
-  test('späte Subscriber bekommen sofort den aktuellen Zustand', () => {
-    const vm = createTodoViewModel(sequentialIds())
-    const keepAlive = vm.todos$.subscribe()
-    vm.add('A')
+  test('canPlace$ ist nur mit Positionen und ohne laufende Bestellung true', () => {
+    const vm = createCartViewModel()
+    const values: boolean[] = []
+    vm.canPlace$.subscribe((value) => values.push(value))
 
-    const late: Todo[][] = []
-    vm.todos$.subscribe((todos) => late.push(todos))
-    expect(late).toEqual([[{ id: '1', title: 'A', done: false }]])
+    vm.add(bremsscheibe)
+    vm.setPlacing(true)
+    vm.setPlacing(false)
+    vm.remove('p-1')
+
+    expect(values).toEqual([false, true, false, true, false])
+  })
+
+  test('späte Subscriber bekommen sofort den aktuellen Warenkorb', () => {
+    const vm = createCartViewModel()
+    const keepAlive = vm.cart$.subscribe()
+    vm.add(zuendkerze)
+
+    const late: CartItem[][] = []
+    vm.cart$.subscribe((cart) => late.push(cart))
+    expect(late).toEqual([[{ productId: 'p-2', quantity: 1, priceCents: 799 }]])
     keepAlive.unsubscribe()
   })
 
-  test('recentSearches$ hält die letzten fünf Suchen als LRU', () => {
-    const vm = createTodoViewModel(sequentialIds())
+  test('recentSearches$ hält die letzten fünf Produktsuchen als LRU', () => {
+    const vm = createCartViewModel()
     const lists: string[][] = []
     vm.recentSearches$.subscribe((list) => lists.push(list))
 
-    for (const term of ['rxjs', 'scan', 'zip', 'share', 'retry', 'debounce', 'scan']) vm.search(term)
+    for (const term of ['bremse', 'kerze', 'öl', 'filter', 'reifen', 'kette', 'kerze']) vm.search(term)
 
     expect(lists[0]).toEqual([])
-    expect(latest(lists)).toEqual(['scan', 'debounce', 'retry', 'share', 'zip'])
+    expect(latest(lists)).toEqual(['kerze', 'kette', 'reifen', 'filter', 'öl'])
   })
 })
