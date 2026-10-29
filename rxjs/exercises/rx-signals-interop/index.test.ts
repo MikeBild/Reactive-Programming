@@ -2,14 +2,14 @@ import { Subject } from 'rxjs'
 import { TestScheduler } from 'rxjs/testing'
 import { describe, expect, test } from 'vitest'
 import { signal } from './signal.js'
-import { createTodoSearchViewModel, toObservable, toSignal, type Todo } from './index.js'
+import { createShopViewModel, toObservable, toSignal, type Product } from './index.js'
 
 const createScheduler = () => new TestScheduler((actual, expected) => expect(actual).toEqual(expected))
 
-const learnRx: Todo = { id: '1', title: 'rxjs lernen', done: false }
-const learnSignals: Todo = { id: '2', title: 'signals lernen', done: false }
-const practiceRx: Todo = { id: '3', title: 'rxjs üben', done: true }
-const all = [learnRx, learnSignals, practiceRx]
+const bremsscheibe: Product = { id: 'p-1', name: 'Bremsscheibe', priceCents: 4_990, stock: 10 }
+const bremsbelag: Product = { id: 'p-2', name: 'Bremsbelag', priceCents: 2_490, stock: 25 }
+const zuendkerze: Product = { id: 'p-3', name: 'Zündkerze', priceCents: 799, stock: 50 }
+const catalog = [bremsscheibe, bremsbelag, zuendkerze]
 
 describe('rx-signals-interop: Brücken', () => {
   test('toObservable liefert den aktuellen Wert und danach jede Änderung', () => {
@@ -19,7 +19,7 @@ describe('rx-signals-interop: Brücken', () => {
 
     count.set(2)
     count.set(2)
-    count.update((n) => n + 1)
+    count.set(count.get() + 1)
     subscription.unsubscribe()
     count.set(99)
 
@@ -30,56 +30,66 @@ describe('rx-signals-interop: Brücken', () => {
     const prices = new Subject<number>()
     const price = toSignal(prices, 0)
 
-    expect(price.value()).toBe(0)
-    prices.next(42)
-    expect(price.value()).toBe(42)
+    expect(price.value.get()).toBe(0)
+    prices.next(4_990)
+    expect(price.value.get()).toBe(4_990)
 
     price.unsubscribe()
-    prices.next(7)
-    expect(price.value()).toBe(42)
+    prices.next(799)
+    expect(price.value.get()).toBe(4_990)
     expect(prices.observed).toBe(false)
   })
 })
 
 describe('rx-signals-interop: View Model', () => {
-  test('der Zustand ist ein Signal und synchron lesbar', () => {
-    const vm = createTodoSearchViewModel(() => new Subject<Todo[]>())
-    vm.add('1', 'rxjs lernen')
-    vm.toggle('1')
-    expect(vm.todos()).toEqual([{ id: '1', title: 'rxjs lernen', done: true }])
+  test('Warenkorb und Gesamtsumme sind Signals und synchron lesbar', () => {
+    const vm = createShopViewModel(() => new Subject<Product[]>())
+    expect(vm.totalCents.get()).toBe(0)
+
+    vm.add(bremsscheibe)
+    vm.add(zuendkerze)
+    vm.add(zuendkerze)
+    expect(vm.cart.get()).toEqual([
+      { productId: 'p-1', quantity: 1, priceCents: 4_990 },
+      { productId: 'p-3', quantity: 2, priceCents: 799 },
+    ])
+    expect(vm.totalCents.get()).toBe(6_588)
+
+    vm.remove('p-1')
+    expect(vm.totalCents.get()).toBe(1_598)
     vm.destroy()
   })
 
-  test('die Suche wartet die Ruhe ab und sucht nur den letzten Begriff', () => {
+  test('die Produktsuche wartet die Ruhe ab und sucht nur den letzten Begriff', () => {
     const searched: string[] = []
     createScheduler().run(({ cold, expectObservable }) => {
-      const search = (term: string) => {
+      const searchProducts = (term: string) => {
         searched.push(term)
-        return cold('-r|', { r: all.filter((todo) => todo.title.includes(term)) })
+        return cold('-r|', { r: catalog.filter((product) => product.name.startsWith(term)) })
       }
-      const vm = createTodoSearchViewModel(search)
+      const vm = createShopViewModel(searchProducts)
 
-      // Tippen: r in 100, rx in 150, danach Ruhe
-      cold('100ms a 49ms b', { a: 'r', b: 'rx' }).subscribe((term) => vm.term.set(term))
+      // Tippen: B in 100, Brems in 150, danach Ruhe
+      cold('100ms a 49ms b', { a: 'B', b: 'Brems' }).subscribe((term) => vm.term.set(term))
 
       // Startwert [] in Frame 0, debounce bis 450, Ergebnis einen Frame später
       expectObservable(toObservable(vm.results), '^ 600ms !').toBe('i 450ms x', {
         i: [],
-        x: [learnRx, practiceRx],
+        x: [bremsscheibe, bremsbelag],
       })
     })
-    expect(searched).toEqual(['rx'])
+    expect(searched).toEqual(['Brems'])
   })
 
   test('ein neuer Begriff bricht die laufende Suche ab', () => {
     createScheduler().run(({ cold, expectObservable, expectSubscriptions }) => {
-      const slow = cold<Todo[]>('1s r|', { r: [] })
-      const fast = cold('-r|', { r: [learnSignals] })
-      const vm = createTodoSearchViewModel((term) => (term === 'rx' ? slow : fast))
+      const slow = cold<Product[]>('1s r|', { r: [] })
+      const fast = cold('-r|', { r: [zuendkerze] })
+      const vm = createShopViewModel((term) => (term === 'Brems' ? slow : fast))
 
-      cold('a 400ms b', { a: 'rx', b: 'signals' }).subscribe((term) => vm.term.set(term))
+      cold('a 400ms b', { a: 'Brems', b: 'Zünd' }).subscribe((term) => vm.term.set(term))
 
-      expectObservable(toObservable(vm.results), '^ 1000ms !').toBe('i 701ms x', { i: [], x: [learnSignals] })
+      expectObservable(toObservable(vm.results), '^ 1000ms !').toBe('i 701ms x', { i: [], x: [zuendkerze] })
       expectSubscriptions(slow.subscriptions).toBe('300ms ^ 400ms !')
     })
   })
