@@ -11,7 +11,7 @@ export const ticks$ = (ms: number): Observable<number> => interval(ms)
 /** Lädt den User erst beim subscribe, für jeden Subscriber neu. */
 export const user$ = (loadUser: () => Promise<User>): Observable<User> => defer(() => loadUser())
 
-/** Macht aus jedem Wert eine Zeile "prefix: wert". */
+/** Macht aus jedem Wert eine Zeile „prefix: wert“. */
 export const withPrefix = <T>(prefix: string, source$: Observable<T>): Observable<string> =>
   source$.pipe(map((value) => `${prefix}: ${String(value)}`))
 

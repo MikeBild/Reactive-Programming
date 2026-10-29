@@ -30,7 +30,7 @@ export const user$ = (loadUser: () => Promise<User>): Observable<User> => {
   throw new Error('TODO: user$')
 }
 
-/** Macht aus jedem Wert eine Zeile "prefix: wert". */
+/** Macht aus jedem Wert eine Zeile „prefix: wert“. */
 export const withPrefix = <T>(prefix: string, source$: Observable<T>): Observable<string> => {
   // TODO: map
   throw new Error('TODO: withPrefix')

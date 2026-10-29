@@ -6,7 +6,7 @@
  * Fehlerwert statt abzubrechen.
  *
  * Backoff: vor dem n-ten Wiederholen wartest du 2 ** n * 250 ms,
- * also 500 ms vor dem ersten und 1000 ms vor dem zweiten Retry.
+ * also 500 ms vor dem ersten und 1.000 ms vor dem zweiten Retry.
  * Wichtig: Fang Fehler im inneren Stream ab, sonst reißt ein kaputter Request
  * alle anderen mit.
  */
