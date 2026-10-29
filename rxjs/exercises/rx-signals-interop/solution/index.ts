@@ -8,7 +8,7 @@ export type CartItem = { productId: string; quantity: number; priceCents: number
 export const toObservable = <T>(source: Signal<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
     subscriber.next(source.get())
-    // watch gibt die Abmelde-Function zurück, sie wird zum Teardown
+    // watch gibt die Abmelde-Funktion zurück, sie wird zum Teardown
     return source.watch((value) => subscriber.next(value))
   })
 

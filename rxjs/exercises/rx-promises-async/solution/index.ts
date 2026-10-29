@@ -14,6 +14,6 @@ export const fromAbortable = <T>(task: (signal: AbortSignal) => Promise<T>): Obs
     return () => controller.abort()
   })
 
-/** Die ersten drei Preise als Array, danach meldet sich die Function ab. */
+/** Die ersten drei Preise als Array, danach meldet sich die Funktion ab. */
 export const firstThree = (prices$: Observable<number>): Promise<number[]> =>
   firstValueFrom(prices$.pipe(take(3), toArray()))

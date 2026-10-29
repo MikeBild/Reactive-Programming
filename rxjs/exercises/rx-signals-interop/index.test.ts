@@ -41,7 +41,7 @@ describe('rx-signals-interop: Brücken', () => {
   })
 })
 
-describe('rx-signals-interop: View Model', () => {
+describe('rx-signals-interop: ViewModel', () => {
   test('Warenkorb und Gesamtsumme sind Signals und synchron lesbar', () => {
     const vm = createShopViewModel(() => new Subject<Product[]>())
     expect(vm.totalCents.get()).toBe(0)

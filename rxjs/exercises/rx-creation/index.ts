@@ -5,7 +5,7 @@
  * fetch-Promise je ein Observable und logge alle drei Streams mit Präfix.
  *
  * Statt document und fetch bekommst du einen EventTarget und eine
- * async Function übergeben. So läuft alles in Node.js und im Test.
+ * async-Funktion übergeben. So läuft alles in Node.js und im Test.
  * Probier es aus: node exercises/rx-creation/demo.ts
  */
 import { Observable } from 'rxjs'

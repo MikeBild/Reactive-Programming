@@ -4,7 +4,7 @@
  * Aufgabe: Bau eine Komponente mit drei Subscriptions auf interval und
  * fromEvent und beende alle über ein gemeinsames destroy$-Signal mit takeUntil.
  *
- * Die Komponente bekommt ein window (EventTarget) und eine render-Function.
+ * Die Komponente bekommt ein window (EventTarget) und eine render-Funktion.
  * - Uhr:      interval(1_000)  -> render('tick 0'), render('tick 1'), ...
  * - Autosave: interval(5_000)  -> render('autosave 0'), ...
  * - Layout:   fromEvent(window, 'resize') -> render('resize')

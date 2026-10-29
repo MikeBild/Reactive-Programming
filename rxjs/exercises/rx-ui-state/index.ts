@@ -1,7 +1,7 @@
 /**
  * Lektion rx-ui-state: UI-Zustand als Stream von Aktionen
  *
- * Aufgabe: Bau das View Model für den Warenkorb im Werkstatt-Shop. Aktionen
+ * Aufgabe: Bau das ViewModel für den Warenkorb im Werkstatt-Shop. Aktionen
  * laufen über ein Subject, scan verdichtet sie mit einem reinen Reducer zum
  * Warenkorb. Gesamtsumme und „Bestellen erlaubt?“ leitest du als eigene
  * Streams ab. Dazu hältst du die letzten fünf Produktsuchen als LRU-Liste.

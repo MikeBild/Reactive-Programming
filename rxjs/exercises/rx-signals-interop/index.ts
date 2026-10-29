@@ -1,7 +1,7 @@
 /**
  * Lektion rx-signals-interop: Signals oder Observables?
  *
- * Aufgabe: Bau ein View Model für den Werkstatt-Shop. Der Warenkorb und seine
+ * Aufgabe: Bau ein ViewModel für den Werkstatt-Shop. Der Warenkorb und seine
  * Gesamtsumme sind Zustand mit aktuellem Wert, also Signals. Die Produktsuche
  * braucht Zeit und Abbruch, also läuft sie als Observable mit debounceTime und
  * switchMap. Das Ergebnis geht als Signal mit Startwert zurück an die Ansicht.
