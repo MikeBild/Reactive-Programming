@@ -1,0 +1,25 @@
+{
+  "name": "reactive-programming-rxjs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Übungen zum Workshop Reactive Programming mit RxJS",
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:solution": "RX_TARGET=solution vitest run",
+    "check": "tsc --noEmit && RX_TARGET=solution vitest run"
+  },
+  "dependencies": {
+    "rxjs": "~7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
