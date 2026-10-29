@@ -45,7 +45,7 @@ describe('rx-ui-state: Reducer', () => {
   })
 })
 
-describe('rx-ui-state: View Model', () => {
+describe('rx-ui-state: ViewModel', () => {
   test('cart$ startet leer und folgt den Aktionen', () => {
     const vm = createCartViewModel()
     const states: CartItem[][] = []

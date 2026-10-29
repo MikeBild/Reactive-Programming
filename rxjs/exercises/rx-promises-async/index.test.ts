@@ -2,7 +2,7 @@ import { firstValueFrom, interval, lastValueFrom, map, Subject } from 'rxjs'
 import { describe, expect, test } from 'vitest'
 import { firstThree, fromAbortable } from './index.js'
 
-/** Eine async Function, die wie fetch auf das AbortSignal hört. */
+/** Eine async-Funktion, die wie fetch auf das AbortSignal hört. */
 const slowTask = (ms: number, value: string) => (signal: AbortSignal) =>
   new Promise<string>((resolve, reject) => {
     const id = setTimeout(() => resolve(value), ms)

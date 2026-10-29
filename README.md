@@ -54,7 +54,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 
 | Lektion | ID | Aufgabe |
 | --- | --- | --- |
-| UI-Zustand als Stream von Aktionen | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Warenkorb-View-Model für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
+| UI-Zustand als Stream von Aktionen | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Warenkorb-ViewModel für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
 | Signals oder Observables? | [`rx-signals-interop`](rxjs/exercises/rx-signals-interop) | Warenkorb und Gesamtsumme als Signal, Produktsuche mit `debounceTime` und `switchMap` als Observable, dazu die Brücken `toObservable` und `toSignal`. |
 
 ## Workshop und Folien
@@ -65,3 +65,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 ## Archiv
 
 Das ältere Material mit C# und Rx.NET liegt unverändert in [`Examples/`](Examples), dazu der frühere Foliensatz (`Reactive-Programming.pptx`, `Reactive-Programming.pdf`) und das Übersichtsdiagramm `overwiew.drawio`.
+
+## Lizenz
+
+[MIT](LICENSE)

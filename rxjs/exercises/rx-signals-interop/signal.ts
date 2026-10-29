@@ -9,7 +9,7 @@
 export type Signal<T> = {
   get: () => T
   set: (value: T) => void
-  /** Ruft listener bei jeder Änderung auf, nicht sofort. Gibt eine Function zum Abmelden zurück. */
+  /** Ruft listener bei jeder Änderung auf, nicht sofort. Gibt eine Funktion zum Abmelden zurück. */
   watch: (listener: (value: T) => void) => () => void
 }
 

@@ -53,7 +53,7 @@ Weil Node.js die Datei ohne Bundler lädt, importierst du lokale Module mit Endu
 
 ## Testen ohne Mocks
 
-Alle Services kommen als Parameter rein, nicht als Import. Im Test ersetzt sie ein `cold` oder `hot` Observable aus dem `TestScheduler` oder eine kleine Fake-Function. Eine Mock-Library brauchst du nicht.
+Alle Services kommen als Parameter rein, nicht als Import. Im Test ersetzt sie ein `cold` oder `hot` Observable aus dem `TestScheduler` oder eine kleine Fake-Funktion. Eine Mock-Library brauchst du nicht.
 
 Die übrigen Lektionen bleiben bei Vitest: Sie lehren kein bestimmtes Test-Werkzeug, die Tests sind dort nur Prüfhilfe. Vitest liefert den Lösungsmodus unten ohne eigenen Loader und die Fake Timers, die zwei Lektionen brauchen: `rx-observable-contract` baut bewusst auf `setInterval` und nicht auf einem RxJS-Scheduler auf, und `rx-subscription-cleanup` prüft, dass nach `destroy` kein Timer mehr läuft.
 
