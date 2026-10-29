@@ -39,7 +39,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 | Push statt Pull | [`rx-push-pull`](rxjs/exercises/rx-push-pull) | Generator und Observable für eins bis zehn. Wer stößt den nächsten Wert an? |
 | Ohne subscribe passiert nichts | [`rx-observable-contract`](rxjs/exercises/rx-observable-contract) | `ticker(ms)` mit `setInterval`, complete nach fünf Werten, Teardown stoppt den Timer. |
 | Fast alles wird zum Observable | [`rx-creation`](rxjs/exercises/rx-creation) | Klicks, Timer und Promise als Observables, zusammen geloggt mit Präfix. Demo: `node exercises/rx-creation/demo.ts` |
-| Operatoren sind Functions in einer pipe | [`rx-operators-pipe`](rxjs/exercises/rx-operators-pipe) | Message Processing: eigene Operatoren `ofType` und `countOfType` mit `filter`, `distinctUntilChanged` und `scan`. |
+| Operatoren sind Funktionen in einer pipe | [`rx-operators-pipe`](rxjs/exercises/rx-operators-pipe) | Message Processing: eigene Operatoren `ofType` und `countOfType` mit `filter`, `distinctUntilChanged` und `scan`. |
 | Jede Subscription braucht ein Ende | [`rx-subscription-cleanup`](rxjs/exercises/rx-subscription-cleanup) | Drei Subscriptions, ein `destroy$`, `takeUntil` und `finalize`. |
 | Welcher Operator kombiniert deine Streams? | [`rx-combining`](rxjs/exercises/rx-combining) | FizzBuzz ohne Modulo: Zahlen und zwei zyklische Streams per `zip`. |
 | Cold oder Hot, wer startet den Producer? | [`rx-cold-hot`](rxjs/exercises/rx-cold-hot) | Zwei Subscriber, zwei Requests. Mit `share` nur noch einer. |
@@ -48,7 +48,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 | Ein Fehler beendet den Stream | [`rx-error-handling`](rxjs/exercises/rx-error-handling) | Drei URLs mit `mergeMap`, `timeout`, `retry` mit Backoff und Fehlerwert per `catchError`. |
 | Subjects teilen Werte, share teilt Arbeit | [`rx-subjects-multicasting`](rxjs/exercises/rx-subjects-multicasting) | Der Letzte macht das Licht aus: eine WebSocket-Verbindung mit `share` und Ref Counting. Dazu ein `CartStore` mit `BehaviorSubject`. |
 | Was tun, wenn mehr Events kommen, als du verarbeitest? | [`rx-time-backpressure`](rxjs/exercises/rx-time-backpressure) | Sensor mit tausend Werten pro Sekunde, Live-Wert per `auditTime`, Durchschnitt per `bufferTime`. Demo: `node exercises/rx-time-backpressure/demo.ts` |
-| Zeit testen ohne zu warten | [`rx-marble-testing`](rxjs/exercises/rx-marble-testing) | Hier schreibst du die Tests mit `node:test`, `node:assert` und `TestScheduler`: `interval` ohne Mocks und die Produktsuche aus `search.ts` mit Marble-Diagrammen. Startpunkt ist `search.test.ts` mit `test.todo`, ausführen mit `npm run test:marble`. |
+| Zeit testen, ohne zu warten | [`rx-marble-testing`](rxjs/exercises/rx-marble-testing) | Hier schreibst du die Tests mit `node:test`, `node:assert` und `TestScheduler`: `interval` ohne Mocks und die Produktsuche aus `search.ts` mit Marble-Diagrammen. Startpunkt ist `search.test.ts` mit `test.todo`, ausführen mit `npm run test:marble`. |
 
 ### Zusatzkapitel
 
