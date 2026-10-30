@@ -54,7 +54,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 
 | Lektion | ID | Aufgabe |
 | --- | --- | --- |
-| UI-Zustand als Stream von Aktionen | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Warenkorb-ViewModel für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
+| UI State als Stream von Actions | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Warenkorb-ViewModel für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
 | Signals oder Observables? | [`rx-signals-interop`](rxjs/exercises/rx-signals-interop) | Warenkorb und Gesamtsumme als Signal, Produktsuche mit `debounceTime` und `switchMap` als Observable, dazu die Brücken `toObservable` und `toSignal`. |
 
 ## Workshop und Folien

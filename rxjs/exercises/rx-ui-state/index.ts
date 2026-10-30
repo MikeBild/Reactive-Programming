@@ -1,5 +1,5 @@
 /**
- * Lektion rx-ui-state: UI-Zustand als Stream von Aktionen
+ * Lektion rx-ui-state: UI State als Stream von Actions
  *
  * Aufgabe: Bau das ViewModel für den Warenkorb im Werkstatt-Shop. Aktionen
  * laufen über ein Subject, scan verdichtet sie mit einem reinen Reducer zum
