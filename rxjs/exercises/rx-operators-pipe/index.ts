@@ -3,7 +3,7 @@
  *
  * Aufgabe: Verarbeite einen Stream von Nachrichten mit Typ und Payload,
  * filtere nach Typ, lass Duplikate per distinctUntilChanged mit
- * Vergleichsfunktion weg und zähle mit scan.
+ * Compare Function weg und zähle mit scan.
  *
  * Schreib dafür zwei eigene Operatoren mit pipe() ohne Quelle.
  * Ein Duplikat ist eine Nachricht mit derselben id wie die direkt davor,
