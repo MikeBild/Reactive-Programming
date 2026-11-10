@@ -61,6 +61,7 @@ Die Reihenfolge folgt der Agenda des Workshops.
 
 - Workshop: [„Reactive Programming mit RxJS“](https://workshops.mikebild.dev/w/reactive-programming/remote/)
 - Folien: [slides.mikebild.dev/introduction-reactive-programming](https://slides.mikebild.dev/introduction-reactive-programming.html)
+- PDF: [slides.mikebild.dev/introduction-reactive-programming.pdf](https://slides.mikebild.dev/introduction-reactive-programming.pdf)
 
 ## Archiv
 
