@@ -6,8 +6,8 @@ const zuendkerze: Product = { id: 'p-2', name: 'Zündkerze', priceCents: 799, st
 
 const latest = <T>(values: T[]) => values[values.length - 1]
 
-describe('rx-ui-state: Reducer', () => {
-  test('add und remove ändern den Warenkorb, ohne ihn zu mutieren', () => {
+describe('rx-ui-state: reducers', () => {
+  test('add and remove change the cart without mutating it', () => {
     const empty: CartItem[] = []
     const one = reduceCart(empty, { type: 'add', item: { productId: 'p-1', quantity: 1, priceCents: 4_990 } })
     const two = reduceCart(one, { type: 'add', item: { productId: 'p-2', quantity: 4, priceCents: 799 } })
@@ -19,7 +19,7 @@ describe('rx-ui-state: Reducer', () => {
     expect(removed).toEqual([{ productId: 'p-2', quantity: 4, priceCents: 799 }])
   })
 
-  test('dasselbe Produkt erhöht die quantity statt eine zweite Position anzulegen', () => {
+  test('the same product raises the quantity instead of creating a second item', () => {
     const item = { productId: 'p-1', quantity: 1, priceCents: 4_990 }
     const once = reduceCart([], { type: 'add', item })
     const twice = reduceCart(once, { type: 'add', item: { ...item, quantity: 2 } })
@@ -28,7 +28,7 @@ describe('rx-ui-state: Reducer', () => {
     expect(once[0]?.quantity).toBe(1)
   })
 
-  test('totalCents summiert quantity × priceCents in ganzen Cent', () => {
+  test('totalCents sums quantity × priceCents in whole cents', () => {
     expect(totalCents([])).toBe(0)
     expect(
       totalCents([
@@ -38,15 +38,15 @@ describe('rx-ui-state: Reducer', () => {
     ).toBe(13_176)
   })
 
-  test('LRU: neueste Suche vorn, Duplikate wandern nach vorn, maximal fünf', () => {
+  test('LRU: newest search first, duplicates move to the front, at most five', () => {
     const push = pushRecent(5)
     const recent = ['a', 'b', 'c', 'd', 'e', 'f', 'c', ' ', 'g'].reduce(push, [])
     expect(recent).toEqual(['g', 'c', 'f', 'e', 'd'])
   })
 })
 
-describe('rx-ui-state: ViewModel', () => {
-  test('cart$ startet leer und folgt den Aktionen', () => {
+describe('rx-ui-state: view model', () => {
+  test('cart$ starts empty and follows the actions', () => {
     const vm = createCartViewModel()
     const states: CartItem[][] = []
     vm.cart$.subscribe((cart) => states.push(cart))
@@ -60,19 +60,19 @@ describe('rx-ui-state: ViewModel', () => {
     expect(latest(states)).toEqual([{ productId: 'p-1', quantity: 2, priceCents: 4_990 }])
   })
 
-  test('totalCents$ meldet nur echte Änderungen', () => {
+  test('totalCents$ only reports real changes', () => {
     const vm = createCartViewModel()
     const totals: number[] = []
     vm.totalCents$.subscribe((total) => totals.push(total))
 
     vm.add(zuendkerze)
     vm.add(bremsscheibe)
-    vm.remove('p-99') // gibt es nicht, die Summe bleibt gleich
+    vm.remove('p-99') // does not exist, the total stays the same
 
     expect(totals).toEqual([0, 799, 5_789])
   })
 
-  test('canPlace$ ist nur mit Positionen und ohne laufende Bestellung true', () => {
+  test('canPlace$ is only true with items and without a running order', () => {
     const vm = createCartViewModel()
     const values: boolean[] = []
     vm.canPlace$.subscribe((value) => values.push(value))
@@ -85,7 +85,7 @@ describe('rx-ui-state: ViewModel', () => {
     expect(values).toEqual([false, true, false, true, false])
   })
 
-  test('späte Subscriber bekommen sofort den aktuellen Warenkorb', () => {
+  test('late subscribers get the current cart immediately', () => {
     const vm = createCartViewModel()
     const keepAlive = vm.cart$.subscribe()
     vm.add(zuendkerze)
@@ -96,7 +96,7 @@ describe('rx-ui-state: ViewModel', () => {
     keepAlive.unsubscribe()
   })
 
-  test('recentSearches$ hält die letzten fünf Produktsuchen als LRU', () => {
+  test('recentSearches$ keeps the last five product searches as LRU', () => {
     const vm = createCartViewModel()
     const lists: string[][] = []
     vm.recentSearches$.subscribe((list) => lists.push(list))

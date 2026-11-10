@@ -1,6 +1,6 @@
 /**
- * Beispiellösung für rx-why. Deine Features sehen anders aus,
- * wichtig ist nur, dass du für jedes begründen kannst, warum es ein Stream ist.
+ * Example solution for rx-why. Your features will look different,
+ * what matters is that you can explain for each one why it is a stream.
  */
 
 export type Source = 'ui' | 'websocket' | 'sse' | 'polling' | 'queue' | 'timer' | 'other'

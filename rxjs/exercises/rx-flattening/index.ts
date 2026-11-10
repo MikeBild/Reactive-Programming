@@ -1,42 +1,42 @@
 /**
- * Lektion rx-flattening: switchMap, mergeMap, concatMap oder exhaustMap?
+ * Lesson rx-flattening: switchMap, mergeMap, concatMap, or exhaustMap?
  *
- * Aufgabe: Bau eine Suche, einen Autosave, eine Upload-Queue und einen
- * Login-Button mit je einem Flattening-Operator und begründe jede Wahl im
- * Code-Kommentar.
+ * Task: Build a search, an autosave, an upload queue, and a
+ * login button, each with one flattening operator, and justify every choice in
+ * a code comment.
  *
- * Alle Services kommen als Parameter rein. Im Test ersetzt sie ein cold
- * Observable, ganz ohne Mock-Library.
+ * All services come in as parameters. In the test, a cold
+ * Observable replaces them, without any mock library.
  */
 import { Observable } from 'rxjs'
 
-/** Suche: nur das Ergebnis zum neuesten Begriff zählt. */
+/** Search: only the result for the latest term counts. */
 export const searchResults = (
   term$: Observable<string>,
   search: (term: string) => Observable<string[]>,
 ): Observable<string[]> => {
-  // TODO: Welcher Operator? Begründung:
+  // TODO: Which operator? Reasoning:
   throw new Error('TODO: searchResults')
 }
 
-/** Autosave: jede Änderung speichern, in der Reihenfolge, in der sie entstanden ist. */
+/** Autosave: save every change, in the order in which it happened. */
 export const autosave = <T>(change$: Observable<T>, save: (change: T) => Observable<T>): Observable<T> => {
-  // TODO: Welcher Operator? Begründung:
+  // TODO: Which operator? Reasoning:
   throw new Error('TODO: autosave')
 }
 
-/** Upload-Queue: Dateien parallel hochladen, aber höchstens concurrency gleichzeitig. */
+/** Upload queue: upload files in parallel, but at most concurrency at a time. */
 export const uploadQueue = (
   file$: Observable<string>,
   upload: (file: string) => Observable<string>,
   concurrency: number,
 ): Observable<string> => {
-  // TODO: Welcher Operator? Begründung:
+  // TODO: Which operator? Reasoning:
   throw new Error('TODO: uploadQueue')
 }
 
-/** Login: ein Doppelklick darf keinen zweiten Request starten, solange der erste läuft. */
+/** Login: a double click must not start a second request while the first one is running. */
 export const loginOnClick = <S>(click$: Observable<unknown>, login: () => Observable<S>): Observable<S> => {
-  // TODO: Welcher Operator? Begründung:
+  // TODO: Which operator? Reasoning:
   throw new Error('TODO: loginOnClick')
 }

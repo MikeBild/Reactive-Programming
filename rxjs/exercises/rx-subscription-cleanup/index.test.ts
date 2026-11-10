@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { mountComponent } from './index.js'
 
-// interval läuft über den asyncScheduler und damit über setInterval.
-// Die Fake Timers von Vitest stellen die Uhr vor, ohne echte Zeit zu warten.
+// interval runs through the asyncScheduler and therefore through setInterval.
+// The fake timers of Vitest advance the clock without waiting real time.
 beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('rx-subscription-cleanup', () => {
-  test('die Komponente reagiert auf Uhr, Autosave und resize', () => {
+  test('the component reacts to clock, autosave, and resize', () => {
     const window = new EventTarget()
     const lines: string[] = []
     mountComponent(window, (line) => lines.push(line))
@@ -23,7 +23,7 @@ describe('rx-subscription-cleanup', () => {
     expect(lines.at(-1)).toBe('resize')
   })
 
-  test('destroy beendet alle drei Subscriptions', () => {
+  test('destroy ends all three subscriptions', () => {
     const window = new EventTarget()
     const lines: string[] = []
     const component = mountComponent(window, (line) => lines.push(line))
@@ -34,7 +34,7 @@ describe('rx-subscription-cleanup', () => {
     expect(lines).toEqual(['tick 0', 'tick gestoppt', 'autosave gestoppt', 'resize gestoppt'])
   })
 
-  test('nach destroy läuft kein Timer und kein Listener mehr', () => {
+  test('after destroy no timer and no listener is running anymore', () => {
     const window = new EventTarget()
     const lines: string[] = []
     const component = mountComponent(window, (line) => lines.push(line))

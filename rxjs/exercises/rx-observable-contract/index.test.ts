@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { ticker } from './index.js'
 
-// setInterval ist kein RxJS-Scheduler, deshalb läuft die Zeit hier über die Fake Timers von Vitest.
+// setInterval is not an RxJS scheduler, so time here runs through the fake timers of Vitest.
 beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('rx-observable-contract', () => {
-  test('ohne subscribe startet kein Timer', () => {
+  test('no timer starts without subscribe', () => {
     ticker(1_000)
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  test('liefert fünf Werte im Takt und meldet dann complete', () => {
+  test('emits five values in step and then reports complete', () => {
     const values: number[] = []
     let completed = false
     ticker(1_000).subscribe({ next: (v) => values.push(v), complete: () => (completed = true) })
@@ -25,13 +25,13 @@ describe('rx-observable-contract', () => {
     expect(completed).toBe(true)
   })
 
-  test('nach complete läuft kein Timer mehr', () => {
+  test('after complete no timer is running anymore', () => {
     ticker(1_000).subscribe()
     vi.advanceTimersByTime(10_000)
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  test('unsubscribe stoppt den Timer', () => {
+  test('unsubscribe stops the timer', () => {
     const values: number[] = []
     const subscription = ticker(1_000).subscribe((v) => values.push(v))
 
@@ -43,7 +43,7 @@ describe('rx-observable-contract', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  test('jeder Subscriber bekommt einen eigenen Timer', () => {
+  test('every subscriber gets its own timer', () => {
     const ticks$ = ticker(1_000)
     ticks$.subscribe()
     ticks$.subscribe()

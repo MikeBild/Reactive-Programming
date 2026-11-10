@@ -1,44 +1,44 @@
 /**
- * Lektion rx-creation: Fast alles wird zum Observable
+ * Lesson rx-creation: Almost everything becomes an Observable
  *
- * Aufgabe: Erzeuge aus Klicks auf einen Button, einem Timer und einem
- * fetch-Promise je ein Observable und logge alle drei Streams mit Präfix.
+ * Task: Create an Observable each from clicks on a button, a timer, and a
+ * fetch Promise, and log all three streams with a prefix.
  *
- * Statt document und fetch bekommst du einen EventTarget und eine
- * async-Funktion übergeben. So läuft alles in Node.js und im Test.
- * Probier es aus: node exercises/rx-creation/demo.ts
+ * Instead of document and fetch you get an EventTarget and an
+ * async function passed in. That way everything runs in Node.js and in the test.
+ * Try it out: node exercises/rx-creation/demo.ts
  */
 import { Observable } from 'rxjs'
 
 export type User = { id: string; name: string }
 
-/** Jeder click-Event auf dem Button wird ein Wert. */
+/** Every click event on the button becomes a value. */
 export const clicks$ = (button: EventTarget): Observable<Event> => {
   // TODO: fromEvent
   throw new Error('TODO: clicks$')
 }
 
-/** Zählt ab 0 hoch, ein Wert alle ms Millisekunden. */
+/** Counts up from 0, one value every ms milliseconds. */
 export const ticks$ = (ms: number): Observable<number> => {
   // TODO: interval
   throw new Error('TODO: ticks$')
 }
 
-/** Lädt den User erst beim subscribe, für jeden Subscriber neu. */
+/** Loads the user only on subscribe, anew for every subscriber. */
 export const user$ = (loadUser: () => Promise<User>): Observable<User> => {
-  // TODO: defer, damit loadUser nicht schon beim Erzeugen läuft
+  // TODO: defer, so that loadUser does not already run on creation
   throw new Error('TODO: user$')
 }
 
-/** Macht aus jedem Wert eine Zeile „prefix: wert“. */
+/** Turns every value into a line “prefix: value”. */
 export const withPrefix = <T>(prefix: string, source$: Observable<T>): Observable<string> => {
   // TODO: map
   throw new Error('TODO: withPrefix')
 }
 
-/** Alle drei Streams als ein Log-Stream mit Präfix click, tick und user. */
+/** All three streams as one log stream with the prefixes click, tick, and user. */
 export const log$ = (button: EventTarget, ms: number, loadUser: () => Promise<User>): Observable<string> => {
-  // TODO: merge aus withPrefix('click', ...), withPrefix('tick', ...), withPrefix('user', ...)
-  //       Für Klicks reicht der Event-Typ, für den User der Name.
+  // TODO: merge of withPrefix('click', ...), withPrefix('tick', ...), withPrefix('user', ...)
+  //       For clicks the event type is enough, for the user the name.
   throw new Error('TODO: log$')
 }

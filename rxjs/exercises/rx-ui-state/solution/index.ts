@@ -16,8 +16,8 @@ export type CartItem = { productId: string; quantity: number; priceCents: number
 export type Action = { type: 'add'; item: CartItem } | { type: 'remove'; productId: string }
 
 /**
- * Reiner Reducer für den Warenkorb. Gibt immer einen neuen Array zurück.
- * Nur die geänderte Position wird kopiert, alle anderen bleiben dieselben Objekte.
+ * Pure reducer for the cart. Always returns a new array.
+ * Only the changed item is copied, all others stay the same objects.
  */
 export const reduceCart = (cart: CartItem[], action: Action): CartItem[] => {
   switch (action.type) {
@@ -35,11 +35,11 @@ export const reduceCart = (cart: CartItem[], action: Action): CartItem[] => {
   }
 }
 
-/** Gesamtsumme in Cent: Σ quantity × priceCents */
+/** Total in cents: Σ quantity × priceCents */
 export const totalCents = (cart: CartItem[]): number =>
   cart.reduce((sum, item) => sum + item.quantity * item.priceCents, 0)
 
-/** Reiner Reducer für die LRU-Liste der letzten Suchen. */
+/** Pure reducer for the LRU list of the last searches. */
 export const pushRecent =
   (limit: number) =>
   (recent: string[], term: string): string[] => {
@@ -64,14 +64,14 @@ export const createCartViewModel = (): CartViewModel => {
   const searches = new Subject<string>()
   const placing$ = new BehaviorSubject(false)
 
-  // Aktionen rein, Zustand raus
+  // Actions in, state out
   const cart$ = actions.pipe(
     scan(reduceCart, [] as CartItem[]),
     startWith([] as CartItem[]),
     shareReplay({ bufferSize: 1, refCount: true }),
   )
 
-  // Abgeleiteter Zustand statt Flags, die du von Hand synchron halten musst
+  // Derived state instead of flags you have to keep in sync by hand
   const totalCents$ = cart$.pipe(map(totalCents), distinctUntilChanged())
 
   const canPlace$ = combineLatest({ cart: cart$, placing: placing$ }).pipe(

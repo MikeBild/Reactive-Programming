@@ -1,16 +1,16 @@
 /**
- * Lektion rx-observable-contract: Ohne subscribe passiert nichts
+ * Lesson rx-observable-contract: Nothing happens without subscribe
  *
- * Aufgabe: Schreib ein Observable ticker(ms), das mit setInterval hochzählt,
- * nach fünf Werten complete meldet und beim unsubscribe den Timer stoppt.
+ * Task: Write an Observable ticker(ms) that counts up with setInterval,
+ * reports complete after five values, and stops the timer on unsubscribe.
  *
- * Der Vertrag: next beliebig oft, danach höchstens einmal error oder complete.
- * Die Teardown-Function, die du zurückgibst, räumt auf.
+ * The contract: next any number of times, then at most once error or complete.
+ * The teardown function you return cleans up.
  */
 import { Observable } from 'rxjs'
 
 export const ticker = (ms: number, count = 5): Observable<number> =>
   new Observable<number>((subscriber) => {
-    // TODO: setInterval starten, 0, 1, 2, ... senden, nach count Werten complete melden
-    // TODO: eine Teardown-Function zurückgeben, die clearInterval aufruft
+    // TODO: start setInterval, send 0, 1, 2, ..., report complete after count values
+    // TODO: return a teardown function that calls clearInterval
   })

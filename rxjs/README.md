@@ -1,62 +1,64 @@
-# Anleitung zu den RxJS-Übungen
+*English · [Deutsch](README.de.md)*
 
-Hier steht, wie du mit den Übungen arbeitest: Befehle, Aufbau einer Übung, Marble Tests und Lösungsmodus. Voraussetzungen, Einrichten und die Liste der Übungen stehen im [README des Repos](../README.md). Alle Befehle laufen in diesem Ordner.
+# Guide to the RxJS exercises
+
+This is how you work with the exercises: commands, structure of an exercise, marble tests, and solution mode. Prerequisites, setup, and the list of exercises are in the [repo README](../README.md). All commands run in this folder.
 
 ## Stack
 
-TypeScript im strict-Modus, ESM, RxJS 7.8 und Vitest. Zeitabhängige Tests laufen mit dem `TestScheduler` aus `rxjs/testing` auf virtueller Zeit. Die Lektion `rx-marble-testing` nutzt statt Vitest den eingebauten Test-Runner von Node (`node:test` und `node:assert`), so wie die Lektion es zeigt.
+TypeScript in strict mode, ESM, RxJS 7.8, and Vitest. Time-dependent tests run with the `TestScheduler` from `rxjs/testing` on virtual time. The lesson `rx-marble-testing` uses the built-in test runner of Node (`node:test` and `node:assert`) instead of Vitest, just as the lesson shows it.
 
-## So arbeitest du mit einer Übung
+## How to work on an exercise
 
-1. Öffne `exercises/<lektion>/index.ts`. Oben steht die Aufgabe, im Code markieren `TODO`-Kommentare die Lücken.
-2. Starte die Tests der Lektion im Watch-Modus, zum Beispiel `npx vitest rx-push-pull`.
-3. Füll die Lücken, bis alle Tests grün sind.
-4. Hängst du fest, schau in `exercises/<lektion>/solution/`.
+1. Open `exercises/<lesson>/index.ts`. The task is at the top, `TODO` comments in the code mark the gaps.
+2. Start the tests of the lesson in watch mode, for example `npx vitest rx-push-pull`.
+3. Fill the gaps until all tests are green.
+4. If you get stuck, look into `exercises/<lesson>/solution/`.
 
-**Rote Tests sind am Anfang gewollt.** Die Startpunkte werfen `TODO`-Fehler, deshalb schlagen `npm test` und `npx vitest run` fehl, solange du die Lücken nicht gefüllt hast. Ein paar Tests sind schon grün, etwa „ohne subscribe startet kein Timer“: Das stimmt auch für einen leeren Startpunkt. Vitest meldet außerdem „Unhandled Errors“, weil die Startpunkte ihre `TODO`-Fehler per `subscriber.error` melden. Auch das verschwindet mit deiner Lösung.
+**Red tests are intended at the start.** The starting points throw `TODO` errors, so `npm test` and `npx vitest run` fail as long as you have not filled the gaps. A few tests are green already, such as “no timer starts without subscribe”: that is also true for an empty starting point. Vitest also reports “Unhandled Errors” because the starting points report their `TODO` errors via `subscriber.error`. That disappears with your solution as well.
 
-Die Tests sind für Startpunkt und Lösung dieselben. `npm run test:solution` lässt sie gegen die Lösungen laufen, dort ist alles grün.
+The tests are the same for the starting point and the reference solution. `npm run test:solution` runs them against the reference solutions, where everything is green.
 
-| Befehl | Was passiert |
+| Command | What happens |
 | --- | --- |
-| `npm test` | Marble Tests (`node --test`) und alle Vitest-Tests gegen deine Startpunkte |
-| `npm run test:marble` | Nur deine Marble Tests aus `rx-marble-testing` mit `node --test` |
-| `npm run test:marble:solution` | Die Marble Tests der Lösung |
-| `npx vitest rx-flattening` | Watch-Modus für eine Lektion |
-| `npm run test:solution` | Alle Tests gegen die Lösungen, inklusive Marble Tests |
-| `npm run typecheck` | `tsc --noEmit` über Startpunkte, Lösungen und Tests |
-| `npm run check` | Typecheck und Lösungs-Tests, zum Beispiel vor einem Commit |
+| `npm test` | Marble tests (`node --test`) and all Vitest tests against your starting points |
+| `npm run test:marble` | Only your marble tests from `rx-marble-testing` with `node --test` |
+| `npm run test:marble:solution` | The marble tests of the reference solution |
+| `npx vitest rx-flattening` | Watch mode for one lesson |
+| `npm run test:solution` | All tests against the reference solutions, including marble tests |
+| `npm run typecheck` | `tsc --noEmit` over starting points, reference solutions, and tests |
+| `npm run check` | Type check and solution tests, for example before a commit |
 
-## Aufbau einer Übung
+## Structure of an exercise
 
 ```text
 exercises/rx-flattening/
-├── index.ts            Startpunkt mit Aufgabe und TODOs
-├── index.test.ts       Tests, laufen gegen index.ts oder die Lösung
+├── index.ts            starting point with task and TODOs
+├── index.test.ts       tests, run against index.ts or the reference solution
 └── solution/
-    └── index.ts        Lösung mit Begründung im Kommentar
+    └── index.ts        reference solution with the reasoning in the comment
 ```
 
-Manche Übungen haben Hilfsdateien, die du nicht ändern musst, etwa `fake-socket.ts` oder `signal.ts`. Bei `rx-marble-testing` ist die Aufgabe der Test selbst: Die Lösung liegt in `solution/search.test.ts`.
+Some exercises have helper files you do not need to change, such as `fake-socket.ts` or `signal.ts`. In `rx-marble-testing` the task is the test itself: the reference solution is in `solution/search.test.ts`.
 
-## Marble Tests mit node:test
+## Marble tests with node:test
 
-`rx-marble-testing` braucht kein Test-Framework. Node.js 26 führt TypeScript-Dateien direkt aus und bringt mit `node:test` einen Test-Runner mit. Der `TestScheduler` bekommt `deepStrictEqual` aus `node:assert/strict` als Vergleich.
+`rx-marble-testing` needs no test framework. Node.js 26 runs TypeScript files directly and ships a test runner with `node:test`. The `TestScheduler` gets `deepStrictEqual` from `node:assert/strict` as its comparison.
 
 ```sh
-npm run test:marble                                            # deine Tests, offene test.todo werden als todo gemeldet
-node --test --watch exercises/rx-marble-testing/search.test.ts # Watch-Modus
-npm run test:marble:solution                                   # die Lösung
+npm run test:marble                                            # your tests, open test.todo entries are reported as todo
+node --test --watch exercises/rx-marble-testing/search.test.ts # watch mode
+npm run test:marble:solution                                   # the reference solution
 ```
 
-Weil Node.js die Datei ohne Bundler lädt, importierst du lokale Module mit Endung `.ts`, etwa `import { searchResults } from './search.ts'`. Vitest ignoriert diesen Ordner.
+Because Node.js loads the file without a bundler, you import local modules with the `.ts` extension, such as `import { searchResults } from './search.ts'`. Vitest ignores this folder.
 
-## Testen ohne Mocks
+## Testing without mocks
 
-Alle Services kommen als Parameter rein, nicht als Import. Im Test ersetzt sie ein `cold` oder `hot` Observable aus dem `TestScheduler` oder eine kleine Fake-Funktion. Eine Mock-Library brauchst du nicht.
+All services come in as parameters, not as imports. In the test, a `cold` or `hot` Observable from the `TestScheduler` or a small fake function replaces them. You do not need a mock library.
 
-Die übrigen Lektionen bleiben bei Vitest: Sie lehren kein bestimmtes Test-Werkzeug, die Tests sind dort nur Prüfhilfe. Vitest liefert den Lösungsmodus unten ohne eigenen Loader und die Fake Timers, die zwei Lektionen brauchen: `rx-observable-contract` baut bewusst auf `setInterval` und nicht auf einem RxJS-Scheduler auf, und `rx-subscription-cleanup` prüft, dass nach `destroy` kein Timer mehr läuft.
+The other lessons stay with Vitest: they do not teach a particular test tool, the tests are only there to check your work. Vitest provides the solution mode below without a custom loader, and the fake timers that two lessons need: `rx-observable-contract` deliberately builds on `setInterval` rather than an RxJS scheduler, and `rx-subscription-cleanup` checks that no timer is still running after `destroy`.
 
-## Wie der Lösungsmodus funktioniert
+## How solution mode works
 
-Die Tests importieren immer `./index.js`. Mit `RX_TARGET=solution` biegt ein kleines Plugin in `vitest.config.ts` diesen Import auf `./solution/index.ts` um. So bleiben Tests, Startpunkt und Lösung in einem Ordner und du kannst sie direkt vergleichen.
+The tests always import `./index.js`. With `RX_TARGET=solution`, a small plugin in `vitest.config.ts` redirects this import to `./solution/index.ts`. That way tests, starting point, and reference solution stay in one folder and you can compare them directly.

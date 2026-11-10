@@ -1,24 +1,24 @@
 /**
- * Lektion rx-promises-async: Promises und Observables arbeiten zusammen
+ * Lesson rx-promises-async: Promises and Observables work together
  *
- * Aufgabe: Schreib eine Funktion fromAbortable(task), die eine async-Funktion
- * mit AbortSignal als Observable liefert, und prüf im Test, dass unsubscribe
- * den Abort auslöst.
+ * Task: Write a function fromAbortable(task) that returns an async function
+ * with AbortSignal as an Observable, and check in the test that unsubscribe
+ * triggers the abort.
  *
- * Zusatz: Hol mit firstValueFrom die ersten drei Preise als Array.
+ * Extra: fetch the first three prices as an array with firstValueFrom.
  */
 import { Observable } from 'rxjs'
 
 export const fromAbortable = <T>(task: (signal: AbortSignal) => Promise<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
-    // TODO: AbortController anlegen, task(controller.signal) starten,
-    //       Ergebnis per next und complete, Fehler per error weiterreichen,
-    //       als Teardown controller.abort() zurückgeben
+    // TODO: create an AbortController, start task(controller.signal),
+    //       pass the result on via next and complete, errors via error,
+    //       return controller.abort() as teardown
     subscriber.error(new Error('TODO: fromAbortable'))
   })
 
-/** Die ersten drei Preise als Array, danach meldet sich die Funktion ab. */
+/** The first three prices as an array, then the function unsubscribes. */
 export const firstThree = (prices$: Observable<number>): Promise<number[]> => {
-  // TODO: firstValueFrom mit take(3) und toArray
+  // TODO: firstValueFrom with take(3) and toArray
   throw new Error('TODO: firstThree')
 }

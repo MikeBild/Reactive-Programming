@@ -1,27 +1,27 @@
 /**
- * Lektion rx-subjects-multicasting: Subjects teilen Werte, share teilt Arbeit
+ * Lesson rx-subjects-multicasting: Subjects share values, share shares work
  *
- * Aufgabe: Teile eine simulierte WebSocket-Verbindung mit share, sodass sie
- * beim ersten Subscriber öffnet und erst schließt, wenn der letzte sich abmeldet.
- * Der Letzte macht das Licht aus.
+ * Task: Share a simulated WebSocket connection with share so that it
+ * opens on the first subscriber and only closes when the last one unsubscribes.
+ * The last one turns off the light.
  *
- * Zusatz: Bau einen CartStore mit BehaviorSubject, damit späte Subscriber
- * sofort den aktuellen Warenkorb bekommen.
+ * Extra: Build a CartStore with BehaviorSubject so that late subscribers
+ * get the current cart immediately.
  */
 import { Observable } from 'rxjs'
 import { type FakeSocketServer } from './fake-socket.js'
 
-/** Cold: jeder Subscriber öffnet eine eigene Verbindung, unsubscribe schließt sie. */
+/** Cold: every subscriber opens its own connection, unsubscribe closes it. */
 export const connectSocket = (server: FakeSocketServer): Observable<string> =>
   new Observable<string>((subscriber) => {
-    // TODO: server.connect(), Nachrichten per subscriber.next weiterreichen,
-    //       als Teardown connection.close() zurückgeben
+    // TODO: server.connect(), pass messages on via subscriber.next,
+    //       return connection.close() as teardown
     subscriber.error(new Error('TODO: connectSocket'))
   })
 
-/** Hot: eine geteilte Verbindung für alle Subscriber. */
+/** Hot: one shared connection for all subscribers. */
 export const sharedSocket = (server: FakeSocketServer): Observable<string> => {
-  // TODO: connectSocket(server) mit share teilen
+  // TODO: share connectSocket(server) with share
   throw new Error('TODO: sharedSocket')
 }
 
@@ -32,12 +32,12 @@ export class CartStore {
   )
 
   add(item: string): void {
-    // TODO: neuen Array mit item per next setzen
+    // TODO: set a new array with item via next
     throw new Error('TODO: add')
   }
 
   get current(): string[] {
-    // TODO: aktuellen Wert aus dem BehaviorSubject lesen
+    // TODO: read the current value from the BehaviorSubject
     throw new Error('TODO: current')
   }
 }

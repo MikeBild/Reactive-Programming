@@ -1,14 +1,14 @@
 /**
- * Lektion rx-signals-interop: Signals oder Observables?
+ * Lesson rx-signals-interop: Signals or Observables?
  *
- * Aufgabe: Bau ein ViewModel für den Werkstatt-Shop. Der Warenkorb und seine
- * Gesamtsumme sind Zustand mit aktuellem Wert, also Signals. Die Produktsuche
- * braucht Zeit und Abbruch, also läuft sie als Observable mit debounceTime und
- * switchMap. Das Ergebnis geht als Signal mit Startwert zurück an die Ansicht.
+ * Task: Build a view model for the workshop shop. The cart and its
+ * total are state with a current value, so Signals. The product search
+ * needs time and cancellation, so it runs as an Observable with debounceTime and
+ * switchMap. The result goes back to the view as a Signal with an initial value.
  *
- * Statt eines Frameworks nutzt du das kleine Signal aus signal.ts und baust die
- * beiden Brücken selbst, die Angular in @angular/core/rxjs-interop mitbringt:
- * toObservable und toSignal.
+ * Instead of a framework you use the small Signal from signal.ts and build the
+ * two bridges yourself that Angular ships in @angular/core/rxjs-interop:
+ * toObservable and toSignal.
  */
 import { Observable } from 'rxjs'
 import { type Signal } from './signal.js'
@@ -16,30 +16,30 @@ import { type Signal } from './signal.js'
 export type Product = { id: string; name: string; priceCents: number; stock: number }
 export type CartItem = { productId: string; quantity: number; priceCents: number }
 
-/** Signal -> Observable: liefert sofort den aktuellen Wert, danach jede Änderung. */
+/** Signal -> Observable: emits the current value immediately, then every change. */
 export const toObservable = <T>(source: Signal<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
-    // TODO: aktuellen Wert per source.get() senden, source.watch(...) anmelden, beim Teardown abmelden
+    // TODO: send the current value via source.get(), register source.watch(...), unregister on teardown
     subscriber.error(new Error('TODO: toObservable'))
   })
 
-/** Observable -> Signal: das Signal hält immer den letzten Wert, bis unsubscribe. */
+/** Observable -> Signal: the Signal always holds the last value, until unsubscribe. */
 export const toSignal = <T>(source$: Observable<T>, initialValue: T): { value: Signal<T>; unsubscribe: () => void } => {
-  // TODO: signal(initialValue) anlegen, source$ abonnieren und per set schreiben
+  // TODO: create signal(initialValue), subscribe to source$ and write via set
   throw new Error('TODO: toSignal')
 }
 
 export type ShopViewModel = {
-  /** Warenkorb als Signal */
+  /** Cart as a Signal */
   cart: Signal<CartItem[]>
-  /** Gesamtsumme in Cent als Signal, folgt dem Warenkorb */
+  /** Total in cents as a Signal, follows the cart */
   totalCents: Signal<number>
-  /** Legt ein Stück in den Warenkorb, bei vorhandenem Produkt steigt die quantity */
+  /** Puts one piece into the cart, for an existing product the quantity rises */
   add: (product: Product) => void
   remove: (productId: string) => void
-  /** Eingabe der Produktsuche als Signal */
+  /** Input of the product search as a Signal */
   term: Signal<string>
-  /** Ergebnis der Suche als Signal, die Zeitlogik dazwischen läuft als Observable */
+  /** Result of the search as a Signal, the time logic in between runs as an Observable */
   results: Signal<Product[]>
   destroy: () => void
 }
@@ -48,9 +48,9 @@ export const createShopViewModel = (
   searchProducts: (term: string) => Observable<Product[]>,
   debounceMs = 300,
 ): ShopViewModel => {
-  // TODO: cart, totalCents und term als signal
-  // TODO: cart.watch(...) hält totalCents aktuell: Σ quantity × priceCents
+  // TODO: cart, totalCents, and term as signal
+  // TODO: cart.watch(...) keeps totalCents up to date: Σ quantity × priceCents
   // TODO: results = toSignal(toObservable(term).pipe(debounceTime, distinctUntilChanged, switchMap(searchProducts)), [])
-  // TODO: destroy meldet results und den watch-Listener ab
+  // TODO: destroy unsubscribes results and the watch listener
   throw new Error('TODO: createShopViewModel')
 }

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { countTo, countTo$ } from './index.js'
 
 describe('rx-push-pull', () => {
-  test('Pull: der Generator rechnet erst, wenn der Consumer next() aufruft', () => {
+  test('pull: the generator only computes when the consumer calls next()', () => {
     const produced: number[] = []
     const numbers = countTo(10, (n) => produced.push(n))
 
@@ -12,17 +12,17 @@ describe('rx-push-pull', () => {
     expect(produced).toEqual([1, 2])
   })
 
-  test('Pull: der Generator liefert eins bis zehn', () => {
+  test('pull: the generator yields one to ten', () => {
     expect([...countTo(10)]).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
 
-  test('Push: ohne subscribe entsteht kein Wert', () => {
+  test('push: no value is created without subscribe', () => {
     const produced: number[] = []
     countTo$(10, (n) => produced.push(n))
     expect(produced).toEqual([])
   })
 
-  test('Push: nach subscribe schickt der Producer alle Werte und complete', () => {
+  test('push: after subscribe the producer sends all values and complete', () => {
     const received: number[] = []
     let completed = false
 
@@ -35,7 +35,7 @@ describe('rx-push-pull', () => {
     expect(completed).toBe(true)
   })
 
-  test('Push: der Producer bestimmt das Tempo, nicht der Consumer', () => {
+  test('push: the producer sets the pace, not the consumer', () => {
     const order: string[] = []
     countTo$(3, (n) => order.push(`produziert ${n}`)).subscribe((n) => order.push(`empfangen ${n}`))
 

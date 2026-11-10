@@ -1,25 +1,25 @@
 /**
- * Lektion rx-cold-hot: Cold oder Hot, wer startet den Producer?
+ * Lesson rx-cold-hot: Cold or hot, who starts the producer?
  *
- * Aufgabe: Abonniere ein defer-fetch-Observable zweimal, zähle die Requests
- * mit tap und teile die Ausführung danach mit share, sodass nur ein Request läuft.
+ * Task: Subscribe to a defer-fetch Observable twice, count the requests
+ * with tap, and then share the execution with share so that only one request runs.
  *
- * Statt fetch bekommst du loadUser übergeben, onRequest zählt mit.
- * Schritt 1: coldUser$ fertig machen und im Test sehen, dass zwei Requests laufen.
- * Schritt 2: sharedUser$ so bauen, dass zwei Subscriber nur einen Request auslösen.
+ * Instead of fetch you get loadUser passed in, onRequest counts along.
+ * Step 1: finish coldUser$ and see in the test that two requests run.
+ * Step 2: build sharedUser$ so that two subscribers trigger only one request.
  */
 import { Observable } from 'rxjs'
 
 export type User = { id: string; name: string }
 
-/** Cold: jeder subscribe startet einen eigenen Request. */
+/** Cold: every subscribe starts its own request. */
 export const coldUser$ = (loadUser: () => Promise<User>, onRequest: () => void): Observable<User> => {
-  // TODO: defer(() => loadUser()) und onRequest per tap aufrufen
+  // TODO: defer(() => loadUser()) and call onRequest via tap
   throw new Error('TODO: coldUser$')
 }
 
-/** Hot: alle gleichzeitigen Subscriber teilen sich einen Request. */
+/** Hot: all concurrent subscribers share one request. */
 export const sharedUser$ = (loadUser: () => Promise<User>, onRequest: () => void): Observable<User> => {
-  // TODO: coldUser$ wiederverwenden und mit share teilen
+  // TODO: reuse coldUser$ and share it with share
   throw new Error('TODO: sharedUser$')
 }

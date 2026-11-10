@@ -5,7 +5,7 @@ export type Component = { destroy: () => void }
 export const mountComponent = (window: EventTarget, render: (line: string) => void): Component => {
   const destroy$ = new Subject<void>()
 
-  // takeUntil steht als letzter Operator, damit es alles davor beendet.
+  // takeUntil comes last as an operator so that it ends everything before it.
   interval(1_000)
     .pipe(
       map((n) => `tick ${n}`),

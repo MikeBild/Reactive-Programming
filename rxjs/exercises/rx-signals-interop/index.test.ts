@@ -11,8 +11,8 @@ const bremsbelag: Product = { id: 'p-2', name: 'Bremsbelag', priceCents: 2_490, 
 const zuendkerze: Product = { id: 'p-3', name: 'Zündkerze', priceCents: 799, stock: 50 }
 const catalog = [bremsscheibe, bremsbelag, zuendkerze]
 
-describe('rx-signals-interop: Brücken', () => {
-  test('toObservable liefert den aktuellen Wert und danach jede Änderung', () => {
+describe('rx-signals-interop: bridges', () => {
+  test('toObservable emits the current value and then every change', () => {
     const count = signal(1)
     const seen: number[] = []
     const subscription = toObservable(count).subscribe((value) => seen.push(value))
@@ -26,7 +26,7 @@ describe('rx-signals-interop: Brücken', () => {
     expect(seen).toEqual([1, 2, 3])
   })
 
-  test('toSignal hält den letzten Wert, bis du dich abmeldest', () => {
+  test('toSignal holds the last value until you unsubscribe', () => {
     const prices = new Subject<number>()
     const price = toSignal(prices, 0)
 
@@ -41,8 +41,8 @@ describe('rx-signals-interop: Brücken', () => {
   })
 })
 
-describe('rx-signals-interop: ViewModel', () => {
-  test('Warenkorb und Gesamtsumme sind Signals und synchron lesbar', () => {
+describe('rx-signals-interop: view model', () => {
+  test('cart and total are Signals and readable synchronously', () => {
     const vm = createShopViewModel(() => new Subject<Product[]>())
     expect(vm.totalCents.get()).toBe(0)
 
@@ -60,7 +60,7 @@ describe('rx-signals-interop: ViewModel', () => {
     vm.destroy()
   })
 
-  test('die Produktsuche wartet die Ruhe ab und sucht nur den letzten Begriff', () => {
+  test('the product search waits for silence and only searches for the last term', () => {
     const searched: string[] = []
     createScheduler().run(({ cold, expectObservable }) => {
       const searchProducts = (term: string) => {
@@ -69,10 +69,10 @@ describe('rx-signals-interop: ViewModel', () => {
       }
       const vm = createShopViewModel(searchProducts)
 
-      // Tippen: B in 100, Brems in 150, danach Ruhe
+      // typing: B in 100, Brems in 150, then silence
       cold('100ms a 49ms b', { a: 'B', b: 'Brems' }).subscribe((term) => vm.term.set(term))
 
-      // Startwert [] in Frame 0, debounce bis 450, Ergebnis einen Frame später
+      // initial value [] in frame 0, debounce until 450, result one frame later
       expectObservable(toObservable(vm.results), '^ 600ms !').toBe('i 450ms x', {
         i: [],
         x: [bremsscheibe, bremsbelag],
@@ -81,7 +81,7 @@ describe('rx-signals-interop: ViewModel', () => {
     expect(searched).toEqual(['Brems'])
   })
 
-  test('ein neuer Begriff bricht die laufende Suche ab', () => {
+  test('a new term cancels the running search', () => {
     createScheduler().run(({ cold, expectObservable, expectSubscriptions }) => {
       const slow = cold<Product[]>('1s r|', { r: [] })
       const fast = cold('-r|', { r: [zuendkerze] })

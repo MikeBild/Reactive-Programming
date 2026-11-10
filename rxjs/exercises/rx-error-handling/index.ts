@@ -1,14 +1,14 @@
 /**
- * Lektion rx-error-handling: Ein Fehler beendet den Stream
+ * Lesson rx-error-handling: An error ends the stream
  *
- * Aufgabe: Lade drei URLs mit mergeMap, gib jedem Request ein Timeout von
- * zwei Sekunden, wiederhole zweimal mit Backoff und liefere bei Fehlern einen
- * Fehlerwert statt abzubrechen.
+ * Task: Load three URLs with mergeMap, give every request a timeout of
+ * two seconds, retry twice with backoff, and on errors deliver an
+ * error value instead of aborting.
  *
- * Backoff: vor dem n-ten Wiederholen wartest du 2 ** n * 250 ms,
- * also 500 ms vor dem ersten und 1.000 ms vor dem zweiten Retry.
- * Wichtig: Fang Fehler im inneren Stream ab, sonst reißt ein kaputter Request
- * alle anderen mit.
+ * Backoff: before the n-th retry you wait 2 ** n * 250 ms,
+ * so 500 ms before the first and 1,000 ms before the second retry.
+ * Important: catch errors in the inner stream, otherwise one broken request
+ * takes all the others down with it.
  */
 import { Observable } from 'rxjs'
 
@@ -17,6 +17,6 @@ export type Result<T> =
   | { kind: 'error'; url: string; message: string }
 
 export const loadAll = <T>(urls: string[], fetchJson: (url: string) => Observable<T>): Observable<Result<T>> => {
-  // TODO: from(urls) mit mergeMap, innen timeout, retry mit delay, map auf ok, catchError auf error
+  // TODO: from(urls) with mergeMap, inside timeout, retry with delay, map to ok, catchError to error
   throw new Error('TODO: loadAll')
 }

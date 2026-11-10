@@ -1,5 +1,5 @@
-// Startet deinen log$ für drei Sekunden: node exercises/rx-creation/demo.ts
-// Mit RX_TARGET=solution läuft die Lösung.
+// Runs your log$ for three seconds: node exercises/rx-creation/demo.ts
+// With RX_TARGET=solution the reference solution runs.
 import { take, takeUntil, timer } from 'rxjs'
 
 const { log$ } = (process.env.RX_TARGET === 'solution'

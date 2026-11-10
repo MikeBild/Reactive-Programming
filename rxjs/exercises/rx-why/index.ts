@@ -1,12 +1,12 @@
 /**
- * Lektion rx-why: Wann lohnt sich reaktive Programmierung?
+ * Lesson rx-why: When is reactive programming worth it?
  *
- * Aufgabe: Schreib drei Features aus deinem Projekt auf, bei denen Werte über
- * die Zeit eintreffen. Prüf für jedes Feature mit der Checkliste aus dem
- * Handout, was den Stream ausmacht.
+ * Task: Write down three features from your project where values arrive
+ * over time. For every feature, check with the checklist from the
+ * handout what makes it a stream.
  *
- * Das Projekt drumherum (TypeScript strict, ESM, rxjs 7.8) steht schon:
- * schau dir package.json und tsconfig.json an.
+ * The project around it (TypeScript strict, ESM, rxjs 7.8) is already set up:
+ * take a look at package.json and tsconfig.json.
  */
 
 export type Source = 'ui' | 'websocket' | 'sse' | 'polling' | 'queue' | 'timer' | 'other'
@@ -14,15 +14,15 @@ export type Source = 'ui' | 'websocket' | 'sse' | 'polling' | 'queue' | 'timer' 
 export type Need = 'combine' | 'cancel' | 'throttle' | 'buffer' | 'retry'
 
 export type StreamFeature = {
-  /** Wie heißt das Feature in deinem Projekt? */
+  /** What is the feature called in your project? */
   name: string
-  /** Woher kommen die Werte? */
+  /** Where do the values come from? */
   source: Source
-  /** Was musst du mit den Werten tun? Mindestens ein Eintrag. */
+  /** What do you have to do with the values? At least one entry. */
   needs: Need[]
-  /** Ein Satz: Warum reicht async await hier nicht? */
+  /** One sentence: why is async await not enough here? */
   why: string
 }
 
-// TODO: Trag drei Features aus deinem Projekt ein.
+// TODO: Enter three features from your project.
 export const features: StreamFeature[] = []

@@ -6,7 +6,7 @@ import { clicks$, log$, ticks$, user$, withPrefix } from './index.js'
 const createScheduler = () => new TestScheduler((actual, expected) => expect(actual).toEqual(expected))
 
 describe('rx-creation', () => {
-  test('clicks$ liefert jeden Klick auf den Button', () => {
+  test('clicks$ emits every click on the button', () => {
     const button = new EventTarget()
     const types: string[] = []
     const subscription = clicks$(button).subscribe((event) => types.push(event.type))
@@ -19,13 +19,13 @@ describe('rx-creation', () => {
     expect(types).toEqual(['click', 'click'])
   })
 
-  test('ticks$ zählt im Takt hoch', () => {
+  test('ticks$ counts up in step', () => {
     createScheduler().run(({ expectObservable }) => {
       expectObservable(ticks$(100).pipe(take(3))).toBe('100ms a 99ms b 99ms (c|)', { a: 0, b: 1, c: 2 })
     })
   })
 
-  test('user$ ruft loadUser erst beim subscribe auf, für jeden Subscriber neu', async () => {
+  test('user$ only calls loadUser on subscribe, anew for every subscriber', async () => {
     let calls = 0
     const loadUser = async () => ({ id: String(++calls), name: 'Ada' })
     const source$ = user$(loadUser)
@@ -36,7 +36,7 @@ describe('rx-creation', () => {
     expect(calls).toBe(2)
   })
 
-  test('withPrefix setzt den Präfix vor jeden Wert', () => {
+  test('withPrefix puts the prefix before every value', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       expectObservable(withPrefix('tick', cold('a-b|', { a: 1, b: 2 }))).toBe('a-b|', {
         a: 'tick: 1',
@@ -45,7 +45,7 @@ describe('rx-creation', () => {
     })
   })
 
-  test('log$ führt Klicks, Ticks und User in einem Stream zusammen', async () => {
+  test('log$ merges clicks, ticks, and user into one stream', async () => {
     const button = new EventTarget()
     const lines = firstValueFrom(log$(button, 20, async () => ({ id: '42', name: 'Ada' })).pipe(take(4), toArray()))
 

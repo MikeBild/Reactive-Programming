@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable, share } from 'rxjs'
 import { type FakeSocketServer } from '../fake-socket.js'
 
-/** Cold: jeder Subscriber öffnet eine eigene Verbindung, unsubscribe schließt sie. */
+/** Cold: every subscriber opens its own connection, unsubscribe closes it. */
 export const connectSocket = (server: FakeSocketServer): Observable<string> =>
   new Observable<string>((subscriber) => {
     const connection = server.connect()
@@ -10,9 +10,9 @@ export const connectSocket = (server: FakeSocketServer): Observable<string> =>
   })
 
 /**
- * Hot: eine geteilte Verbindung für alle Subscriber.
- * share zählt die Subscriber mit. Fällt die Zahl auf null, meldet share die
- * Quelle ab (resetOnRefCountZero ist per Default true) und die Verbindung schließt.
+ * Hot: one shared connection for all subscribers.
+ * share counts the subscribers. When the count drops to zero, share unsubscribes
+ * from the source (resetOnRefCountZero is true by default) and the connection closes.
  */
 export const sharedSocket = (server: FakeSocketServer): Observable<string> => connectSocket(server).pipe(share())
 

@@ -8,14 +8,14 @@ type Order = { total: number }
 
 const messages: Record<string, Message> = {
   a: { type: 'order-placed', id: '1', payload: { total: 10 } },
-  d: { type: 'order-placed', id: '1', payload: { total: 10 } }, // Duplikat von a
+  d: { type: 'order-placed', id: '1', payload: { total: 10 } }, // duplicate of a
   b: { type: 'user-joined', id: '2', payload: { name: 'Ada' } },
   c: { type: 'order-placed', id: '3', payload: { total: 25 } },
   e: { type: 'user-joined', id: '4', payload: { name: 'Grace' } },
 }
 
 describe('rx-operators-pipe', () => {
-  test('ofType filtert nach Typ und liefert die Payload', () => {
+  test('ofType filters by type and emits the payload', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const messages$ = cold<Message>('a-b-c|', messages)
       expectObservable(messages$.pipe(ofType<Order>('order-placed'))).toBe('a---c|', {
@@ -25,7 +25,7 @@ describe('rx-operators-pipe', () => {
     })
   })
 
-  test('ofType lässt direkt wiederholte Nachrichten weg', () => {
+  test('ofType drops directly repeated messages', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const messages$ = cold<Message>('a-d-c|', messages)
       expectObservable(messages$.pipe(ofType<Order>('order-placed'))).toBe('a---c|', {
@@ -35,21 +35,21 @@ describe('rx-operators-pipe', () => {
     })
   })
 
-  test('ein Duplikat zählt auch dann nicht, wenn eine fremde Nachricht dazwischen liegt', () => {
+  test('a duplicate still does not count when a foreign message lies in between', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const messages$ = cold<Message>('a-b-d-c|', messages)
       expectObservable(messages$.pipe(countOfType('order-placed'))).toBe('a-----c|', { a: 1, c: 2 })
     })
   })
 
-  test('countOfType liefert nach jeder Nachricht den Zwischenstand', () => {
+  test('countOfType emits the running count after every message', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const messages$ = cold<Message>('a-b-c-e|', messages)
       expectObservable(messages$.pipe(countOfType('user-joined'))).toBe('--x---y|', { x: 1, y: 2 })
     })
   })
 
-  test('die Quelle bleibt unverändert, jeder Operator liefert ein neues Observable', () => {
+  test('the source stays unchanged, every operator returns a new Observable', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const messages$ = cold<Message>('a-b|', messages)
       const counted$ = messages$.pipe(countOfType('order-placed'))

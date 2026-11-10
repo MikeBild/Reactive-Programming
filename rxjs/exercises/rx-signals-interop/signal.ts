@@ -1,15 +1,15 @@
 /**
- * Ein minimales Signal ohne Framework, wie im Handout der Lektion: ein
- * aktueller Wert, synchron lesbar per get, änderbar per set, mit watch für
- * Änderungen. Angular, Solid, Preact und Vue haben dasselbe Modell mit mehr
- * Komfort, etwa computed und effect.
+ * A minimal Signal without a framework, as in the handout of the lesson: a
+ * current value, readable synchronously via get, changeable via set, with watch for
+ * changes. Angular, Solid, Preact, and Vue have the same model with more
+ * convenience, such as computed and effect.
  *
- * Kleine Ergänzung zum Handout: set mit demselben Wert benachrichtigt niemanden.
+ * Small addition to the handout: set with the same value notifies nobody.
  */
 export type Signal<T> = {
   get: () => T
   set: (value: T) => void
-  /** Ruft listener bei jeder Änderung auf, nicht sofort. Gibt eine Funktion zum Abmelden zurück. */
+  /** Calls listener on every change, not immediately. Returns a function to unsubscribe. */
   watch: (listener: (value: T) => void) => () => void
 }
 

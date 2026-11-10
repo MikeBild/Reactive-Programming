@@ -1,5 +1,5 @@
-// Zeigt drei Sekunden lang Live-Wert und Durchschnitt: node exercises/rx-time-backpressure/demo.ts
-// Mit RX_TARGET=solution läuft die Lösung.
+// Shows live value and average for three seconds: node exercises/rx-time-backpressure/demo.ts
+// With RX_TARGET=solution the reference solution runs.
 import { share, takeUntil, timer } from 'rxjs'
 
 const { averagePer, liveValue, sensor$ } = (process.env.RX_TARGET === 'solution'

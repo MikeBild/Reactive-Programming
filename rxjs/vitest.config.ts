@@ -1,15 +1,15 @@
 import { dirname, join } from 'node:path'
 import { defineConfig, type Plugin } from 'vitest/config'
 
-// RX_TARGET=solution lässt die Tests gegen solution/index.ts statt gegen
-// deinen Startpunkt index.ts laufen. Die Tests selbst bleiben unverändert.
+// RX_TARGET=solution runs the tests against solution/index.ts instead of
+// your starting point index.ts. The tests themselves stay unchanged.
 const target = process.env.RX_TARGET === 'solution' ? 'solution' : 'exercise'
 
 const useSolution = (): Plugin => ({
   name: 'rx-use-solution',
   enforce: 'pre',
-  // Vitest cacht transformierte Module. Der Schlüssel muss das Ziel kennen,
-  // sonst liefert ein Lauf das Ergebnis des anderen.
+  // Vitest caches transformed modules. The key has to know the target,
+  // otherwise one run returns the result of the other.
   configureVitest({ defineCacheKeyGenerator }) {
     defineCacheKeyGenerator(() => `rx-target-${target}`)
   },
@@ -26,7 +26,7 @@ export default defineConfig({
   plugins: [useSolution()],
   test: {
     include: ['exercises/**/*.test.ts'],
-    // rx-marble-testing läuft mit node:test (npm run test:marble), nicht mit Vitest
+    // rx-marble-testing runs with node:test (npm run test:marble), not with Vitest
     exclude: ['**/node_modules/**', 'exercises/*/solution/**', 'exercises/rx-marble-testing/**'],
     testTimeout: 5_000,
   },

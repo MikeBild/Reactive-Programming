@@ -2,20 +2,20 @@ import { defer, fromEvent, interval, map, merge, type Observable } from 'rxjs'
 
 export type User = { id: string; name: string }
 
-/** Jeder click-Event auf dem Button wird ein Wert. */
+/** Every click event on the button becomes a value. */
 export const clicks$ = (button: EventTarget): Observable<Event> => fromEvent(button, 'click')
 
-/** Zählt ab 0 hoch, ein Wert alle ms Millisekunden. */
+/** Counts up from 0, one value every ms milliseconds. */
 export const ticks$ = (ms: number): Observable<number> => interval(ms)
 
-/** Lädt den User erst beim subscribe, für jeden Subscriber neu. */
+/** Loads the user only on subscribe, anew for every subscriber. */
 export const user$ = (loadUser: () => Promise<User>): Observable<User> => defer(() => loadUser())
 
-/** Macht aus jedem Wert eine Zeile „prefix: wert“. */
+/** Turns every value into a line “prefix: value”. */
 export const withPrefix = <T>(prefix: string, source$: Observable<T>): Observable<string> =>
   source$.pipe(map((value) => `${prefix}: ${String(value)}`))
 
-/** Alle drei Streams als ein Log-Stream mit Präfix click, tick und user. */
+/** All three streams as one log stream with the prefixes click, tick, and user. */
 export const log$ = (button: EventTarget, ms: number, loadUser: () => Promise<User>): Observable<string> =>
   merge(
     withPrefix('click', clicks$(button).pipe(map((event) => event.type))),

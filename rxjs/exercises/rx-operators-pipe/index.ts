@@ -1,26 +1,26 @@
 /**
- * Lektion rx-operators-pipe: Operatoren sind Functions in einer pipe
+ * Lesson rx-operators-pipe: Operators are functions in a pipe
  *
- * Aufgabe: Verarbeite einen Stream von Nachrichten mit Typ und Payload,
- * filtere nach Typ, lass Duplikate per distinctUntilChanged mit
- * Compare Function weg und zähle mit scan.
+ * Task: Process a stream of messages with type and payload,
+ * filter by type, drop duplicates via distinctUntilChanged with a
+ * compare function, and count with scan.
  *
- * Schreib dafür zwei eigene Operatoren mit pipe() ohne Quelle.
- * Ein Duplikat ist eine Nachricht mit derselben id wie die direkt davor,
- * etwa weil die Queue sie nach einem Timeout noch einmal zustellt.
+ * For that, write two operators of your own with pipe() without a source.
+ * A duplicate is a message with the same id as the one directly before it,
+ * for example because the queue delivers it again after a timeout.
  */
 import { type OperatorFunction } from 'rxjs'
 
 export type Message<P = unknown> = { type: string; id: string; payload: P }
 
-/** Lässt nur Nachrichten eines Typs durch, ohne direkt wiederholte ids, und liefert deren Payload. */
+/** Lets only messages of one type through, without directly repeated ids, and emits their payload. */
 export const ofType = <P>(type: string): OperatorFunction<Message, P> => {
-  // TODO: filter nach type, distinctUntilChanged mit Vergleich der id, map auf payload
+  // TODO: filter by type, distinctUntilChanged comparing the id, map to payload
   throw new Error('TODO: ofType')
 }
 
-/** Zählt die Nachrichten eines Typs ohne Duplikate, gibt nach jeder Nachricht den Zwischenstand aus. */
+/** Counts the messages of one type without duplicates, emits the running count after every message. */
 export const countOfType = (type: string): OperatorFunction<Message, number> => {
-  // TODO: ofType wiederverwenden und mit scan zählen
+  // TODO: reuse ofType and count with scan
   throw new Error('TODO: countOfType')
 }

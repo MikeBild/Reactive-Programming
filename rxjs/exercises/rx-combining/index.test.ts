@@ -9,7 +9,7 @@ const classic = (max: number) =>
   })
 
 describe('rx-combining', () => {
-  test('cycle wiederholt die Werte endlos', async () => {
+  test('cycle repeats the values endlessly', async () => {
     await expect(lastValueFrom(cycle(['a', 'b']).pipe(take(5), toArray()))).resolves.toEqual([
       'a',
       'b',
@@ -19,17 +19,17 @@ describe('rx-combining', () => {
     ])
   })
 
-  test('die ersten fünfzehn Werte', async () => {
+  test('the first fifteen values', async () => {
     await expect(lastValueFrom(fizzBuzz$(15).pipe(toArray()))).resolves.toEqual([
       '1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz',
     ])
   })
 
-  test('eins bis hundert entspricht der klassischen Lösung', async () => {
+  test('one to one hundred matches the classic solution', async () => {
     await expect(lastValueFrom(fizzBuzz$().pipe(toArray()))).resolves.toEqual(classic(100))
   })
 
-  test('der Stream endet mit den Zahlen, obwohl Fizz und Buzz endlos sind', async () => {
+  test('the stream ends with the numbers, although Fizz and Buzz are endless', async () => {
     const values = await lastValueFrom(fizzBuzz$(7).pipe(toArray()))
     expect(values).toHaveLength(7)
   })

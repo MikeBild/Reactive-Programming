@@ -8,11 +8,11 @@ export const loadAll = <T>(urls: string[], fetchJson: (url: string) => Observabl
   from(urls).pipe(
     mergeMap((url) =>
       fetchJson(url).pipe(
-        // timeout vor retry: jeder Versuch bekommt seine eigenen zwei Sekunden
+        // timeout before retry: every attempt gets its own two seconds
         timeout({ first: 2_000 }),
         retry({ count: 2, delay: (_error, attempt) => timer(2 ** attempt * 250) }),
         map((value): Result<T> => ({ kind: 'ok', url, value })),
-        // catchError innen: der Fehler wird zum Wert, die anderen Requests laufen weiter
+        // catchError inside: the error becomes a value, the other requests keep running
         catchError((error: unknown) =>
           of<Result<T>>({ kind: 'error', url, message: error instanceof Error ? error.message : String(error) }),
         ),

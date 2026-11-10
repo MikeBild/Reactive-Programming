@@ -1,19 +1,21 @@
-# Übungen: Reactive Programming mit RxJS
+*English · [Deutsch](README.de.md)*
 
-Übungs-Repo zum Workshop „Reactive Programming mit RxJS“. Zu jeder Lektion gibt es eine Übung mit Startpunkt, Tests und Lösung. In den späteren Übungen ist ein kleiner Werkstatt-Shop mit Produktsuche und Warenkorb das durchgehende Beispiel.
+# Exercises: Reactive programming with RxJS
 
-## Was du lernst
+Exercise repo for the workshop “Reactive programming with RxJS”. Every lesson has an exercise with a starting point, tests, and a reference solution. In the later exercises, a small workshop shop with product search and cart is the running example.
 
-- Observables erzeugen, teilen und jede Subscription sauber beenden
-- Streams mit Operatoren verarbeiten, kombinieren und Fehler abfangen
-- Zeitabhängigen Code mit dem `TestScheduler` ohne echtes Warten testen
+## What you learn
 
-## Voraussetzungen
+- Create and share Observables, and end every subscription cleanly
+- Process and combine streams with operators, and catch errors
+- Test time-dependent code with the `TestScheduler` without real waiting
 
-- **Node.js 26** – `nvm use` im Ordner `rxjs/` liest die Version aus [`rxjs/.nvmrc`](rxjs/.nvmrc).
-- Ein Editor mit TypeScript-Unterstützung
+## Prerequisites
 
-## Einrichten
+- **Node.js 26** – `nvm use` in the `rxjs/` folder reads the version from [`rxjs/.nvmrc`](rxjs/.nvmrc).
+- An editor with TypeScript support
+
+## Setup
 
 ```sh
 git clone https://github.com/MikeBild/Reactive-Programming.git
@@ -23,50 +25,50 @@ npm ci
 npm run check
 ```
 
-`npm run check` prüft die Typen und lässt alle Tests gegen die Lösungen laufen. Danach ist alles grün.
+`npm run check` checks the types and runs all tests against the reference solutions. After that, everything is green.
 
-## So arbeitest du mit einer Übung
+## How to work on an exercise
 
-Jede Übung liegt in `rxjs/exercises/<lektion>/`. Der Startpunkt `index.ts` enthält die Aufgabe und `TODO`-Kommentare, `index.test.ts` prüft deinen Code, in `solution/` liegt die Lösung zum Vergleich. Alle Befehle laufen im Ordner `rxjs/`. Wie du die Tests startest, warum sie am Anfang rot sind und wie der Lösungsmodus funktioniert, steht in [`rxjs/README.md`](rxjs/README.md).
+Every exercise lives in `rxjs/exercises/<lesson>/`. The starting point `index.ts` contains the task and `TODO` comments, `index.test.ts` checks your code, and `solution/` holds the reference solution for comparison. All commands run in the `rxjs/` folder. How to run the tests, why they are red at first, and how solution mode works is described in [`rxjs/README.md`](rxjs/README.md).
 
-## Übungen
+## Exercises
 
-Die Reihenfolge folgt der Agenda des Workshops.
+The order follows the agenda of the workshop.
 
-| Lektion | ID | Aufgabe |
+| Lesson | ID | Task |
 | --- | --- | --- |
-| Wann lohnt sich reaktive Programmierung? | [`rx-why`](rxjs/exercises/rx-why) | Das Projekt steht. Notier drei Features aus deinem Projekt, bei denen Werte über die Zeit eintreffen. |
-| Push statt Pull | [`rx-push-pull`](rxjs/exercises/rx-push-pull) | Generator und Observable für eins bis zehn. Wer stößt den nächsten Wert an? |
-| Ohne subscribe passiert nichts | [`rx-observable-contract`](rxjs/exercises/rx-observable-contract) | `ticker(ms)` mit `setInterval`, complete nach fünf Werten, Teardown stoppt den Timer. |
-| Fast alles wird zum Observable | [`rx-creation`](rxjs/exercises/rx-creation) | Klicks, Timer und Promise als Observables, zusammen geloggt mit Präfix. Demo: `node exercises/rx-creation/demo.ts` |
-| Operatoren sind Funktionen in einer pipe | [`rx-operators-pipe`](rxjs/exercises/rx-operators-pipe) | Message Processing: eigene Operatoren `ofType` und `countOfType` mit `filter`, `distinctUntilChanged` und `scan`. |
-| Jede Subscription braucht ein Ende | [`rx-subscription-cleanup`](rxjs/exercises/rx-subscription-cleanup) | Drei Subscriptions, ein `destroy$`, `takeUntil` und `finalize`. |
-| Welcher Operator kombiniert deine Streams? | [`rx-combining`](rxjs/exercises/rx-combining) | FizzBuzz ohne Modulo: Zahlen und zwei zyklische Streams per `zip`. |
-| Cold oder Hot, wer startet den Producer? | [`rx-cold-hot`](rxjs/exercises/rx-cold-hot) | Zwei Subscriber, zwei Requests. Mit `share` nur noch einer. |
-| Promises und Observables arbeiten zusammen | [`rx-promises-async`](rxjs/exercises/rx-promises-async) | `fromAbortable(task)`: unsubscribe löst den Abort aus. Dazu `firstValueFrom`. |
-| switchMap, mergeMap, concatMap oder exhaustMap? | [`rx-flattening`](rxjs/exercises/rx-flattening) | Suche, Autosave, Upload-Queue und Login mit `switchMap`, `concatMap`, `mergeMap` und `exhaustMap`, jede Wahl begründet. |
-| Ein Fehler beendet den Stream | [`rx-error-handling`](rxjs/exercises/rx-error-handling) | Drei URLs mit `mergeMap`, `timeout`, `retry` mit Backoff und Fehlerwert per `catchError`. |
-| Subjects teilen Werte, share teilt Arbeit | [`rx-subjects-multicasting`](rxjs/exercises/rx-subjects-multicasting) | Der Letzte macht das Licht aus: eine WebSocket-Verbindung mit `share` und Ref Counting. Dazu ein `CartStore` mit `BehaviorSubject`. |
-| Was tun, wenn mehr Events kommen, als du verarbeitest? | [`rx-time-backpressure`](rxjs/exercises/rx-time-backpressure) | Sensor mit tausend Werten pro Sekunde, Live-Wert per `auditTime`, Durchschnitt per `bufferTime`. Demo: `node exercises/rx-time-backpressure/demo.ts` |
-| Zeit testen, ohne zu warten | [`rx-marble-testing`](rxjs/exercises/rx-marble-testing) | Hier schreibst du die Tests mit `node:test`, `node:assert` und `TestScheduler`: `interval` ohne Mocks und die Produktsuche aus `search.ts` mit Marble-Diagrammen. Startpunkt ist `search.test.ts` mit `test.todo`, ausführen mit `npm run test:marble`. |
+| When is reactive programming worth it? | [`rx-why`](rxjs/exercises/rx-why) | The project is set up. Note three features from your project where values arrive over time. |
+| Push instead of pull | [`rx-push-pull`](rxjs/exercises/rx-push-pull) | Generator and Observable for one to ten. Who triggers the next value? |
+| Nothing happens without subscribe | [`rx-observable-contract`](rxjs/exercises/rx-observable-contract) | `ticker(ms)` with `setInterval`, complete after five values, teardown stops the timer. |
+| Almost everything becomes an Observable | [`rx-creation`](rxjs/exercises/rx-creation) | Clicks, timer, and Promise as Observables, logged together with a prefix. Demo: `node exercises/rx-creation/demo.ts` |
+| Operators are functions in a pipe | [`rx-operators-pipe`](rxjs/exercises/rx-operators-pipe) | Message processing: your own operators `ofType` and `countOfType` with `filter`, `distinctUntilChanged`, and `scan`. |
+| Every subscription needs an end | [`rx-subscription-cleanup`](rxjs/exercises/rx-subscription-cleanup) | Three subscriptions, one `destroy$`, `takeUntil`, and `finalize`. |
+| Which operator combines your streams? | [`rx-combining`](rxjs/exercises/rx-combining) | FizzBuzz without modulo: numbers and two cyclic streams via `zip`. |
+| Cold or hot, who starts the producer? | [`rx-cold-hot`](rxjs/exercises/rx-cold-hot) | Two subscribers, two requests. With `share`, only one. |
+| Promises and Observables work together | [`rx-promises-async`](rxjs/exercises/rx-promises-async) | `fromAbortable(task)`: unsubscribe triggers the abort. Plus `firstValueFrom`. |
+| switchMap, mergeMap, concatMap, or exhaustMap? | [`rx-flattening`](rxjs/exercises/rx-flattening) | Search, autosave, upload queue, and login with `switchMap`, `concatMap`, `mergeMap`, and `exhaustMap`, each choice justified. |
+| An error ends the stream | [`rx-error-handling`](rxjs/exercises/rx-error-handling) | Three URLs with `mergeMap`, `timeout`, `retry` with backoff, and an error value via `catchError`. |
+| Subjects share values, share shares work | [`rx-subjects-multicasting`](rxjs/exercises/rx-subjects-multicasting) | The last one turns off the light: one WebSocket connection with `share` and ref counting. Plus a `CartStore` with `BehaviorSubject`. |
+| What if more events arrive than you can process? | [`rx-time-backpressure`](rxjs/exercises/rx-time-backpressure) | A sensor with a thousand values per second, live value via `auditTime`, average via `bufferTime`. Demo: `node exercises/rx-time-backpressure/demo.ts` |
+| Testing time without waiting | [`rx-marble-testing`](rxjs/exercises/rx-marble-testing) | Here you write the tests yourself with `node:test`, `node:assert`, and `TestScheduler`: `interval` without mocks and the product search from `search.ts` with marble diagrams. The starting point is `search.test.ts` with `test.todo`, run it with `npm run test:marble`. |
 
-### Zusatzkapitel
+### Extra chapters
 
-| Lektion | ID | Aufgabe |
+| Lesson | ID | Task |
 | --- | --- | --- |
-| UI State als Stream von Actions | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Warenkorb-ViewModel für den Werkstatt-Shop: Aktionen und `scan`, abgeleitet `totalCents$` und `canPlace$`, dazu die letzten fünf Suchen als LRU-Liste. |
-| Signals oder Observables? | [`rx-signals-interop`](rxjs/exercises/rx-signals-interop) | Warenkorb und Gesamtsumme als Signal, Produktsuche mit `debounceTime` und `switchMap` als Observable, dazu die Brücken `toObservable` und `toSignal`. |
+| UI state as a stream of Actions | [`rx-ui-state`](rxjs/exercises/rx-ui-state) | Cart view model for the workshop shop: actions and `scan`, derived `totalCents$` and `canPlace$`, plus the last five searches as an LRU list. |
+| Signals or Observables? | [`rx-signals-interop`](rxjs/exercises/rx-signals-interop) | Cart and total as a Signal, product search with `debounceTime` and `switchMap` as an Observable, plus the bridges `toObservable` and `toSignal`. |
 
-## Workshop und Folien
+## Workshop and slides
 
-- Workshop: [„Reactive Programming mit RxJS“](https://workshops.mikebild.dev/w/reactive-programming/remote/)
-- Folien: [slides.mikebild.dev/introduction-reactive-programming](https://slides.mikebild.dev/introduction-reactive-programming.html)
+- Workshop: [“Reactive programming with RxJS”](https://workshops.mikebild.dev/w/reactive-programming/remote/)
+- Slides: [slides.mikebild.dev/introduction-reactive-programming](https://slides.mikebild.dev/introduction-reactive-programming.html)
 - PDF: [slides.mikebild.dev/introduction-reactive-programming.pdf](https://slides.mikebild.dev/introduction-reactive-programming.pdf)
 
-## Archiv
+## Archive
 
-Das ältere Material mit C# und Rx.NET liegt unverändert in [`Examples/`](Examples), dazu der frühere Foliensatz (`Reactive-Programming.pptx`, `Reactive-Programming.pdf`) und das Übersichtsdiagramm `overwiew.drawio`.
+The earlier material with C# and Rx.NET is kept unchanged in [`Examples/`](Examples), together with the earlier slide deck (`Reactive-Programming.pptx`, `Reactive-Programming.pdf`) and the overview diagram `overwiew.drawio`.
 
-## Lizenz
+## License
 
 [MIT](LICENSE)

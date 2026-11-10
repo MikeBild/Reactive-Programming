@@ -3,15 +3,15 @@ import { describe, expect, test } from 'vitest'
 import { features } from './index.js'
 
 describe('rx-why', () => {
-  test('rxjs ist installiert und läuft', async () => {
+  test('rxjs is installed and runs', async () => {
     await expect(firstValueFrom(from([1, 2, 3]).pipe(toArray()))).resolves.toEqual([1, 2, 3])
   })
 
-  test('du hast mindestens drei Features notiert', () => {
+  test('you have noted at least three features', () => {
     expect(features.length).toBeGreaterThanOrEqual(3)
   })
 
-  test('jedes Feature hat Namen, Bedarf und Begründung', () => {
+  test('every feature has a name, a need, and a reason', () => {
     for (const feature of features) {
       expect(feature.name.trim()).not.toBe('')
       expect(feature.needs.length).toBeGreaterThan(0)

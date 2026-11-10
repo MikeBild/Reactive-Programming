@@ -10,10 +10,10 @@ export const fromAbortable = <T>(task: (signal: AbortSignal) => Promise<T>): Obs
       },
       (error: unknown) => subscriber.error(error),
     )
-    // Nach complete oder error ist abort() harmlos, nach unsubscribe bricht es die Arbeit ab.
+    // After complete or error, abort() is harmless, after unsubscribe it cancels the work.
     return () => controller.abort()
   })
 
-/** Die ersten drei Preise als Array, danach meldet sich die Funktion ab. */
+/** The first three prices as an array, then the function unsubscribes. */
 export const firstThree = (prices$: Observable<number>): Promise<number[]> =>
   firstValueFrom(prices$.pipe(take(3), toArray()))

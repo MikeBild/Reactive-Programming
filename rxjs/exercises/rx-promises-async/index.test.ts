@@ -2,7 +2,7 @@ import { firstValueFrom, interval, lastValueFrom, map, Subject } from 'rxjs'
 import { describe, expect, test } from 'vitest'
 import { firstThree, fromAbortable } from './index.js'
 
-/** Eine async-Funktion, die wie fetch auf das AbortSignal hört. */
+/** An async function that listens to the AbortSignal like fetch does. */
 const slowTask = (ms: number, value: string) => (signal: AbortSignal) =>
   new Promise<string>((resolve, reject) => {
     const id = setTimeout(() => resolve(value), ms)
@@ -13,11 +13,11 @@ const slowTask = (ms: number, value: string) => (signal: AbortSignal) =>
   })
 
 describe('rx-promises-async', () => {
-  test('liefert das Ergebnis der Task und meldet complete', async () => {
+  test('emits the result of the task and reports complete', async () => {
     await expect(lastValueFrom(fromAbortable(slowTask(5, 'fertig')))).resolves.toBe('fertig')
   })
 
-  test('startet die Task erst beim subscribe', () => {
+  test('only starts the task on subscribe', () => {
     let started = 0
     fromAbortable(async () => {
       started++
@@ -26,7 +26,7 @@ describe('rx-promises-async', () => {
     expect(started).toBe(0)
   })
 
-  test('unsubscribe löst den Abort aus', () => {
+  test('unsubscribe triggers the abort', () => {
     let signal: AbortSignal | undefined
     const subscription = fromAbortable((s) => {
       signal = s
@@ -38,7 +38,7 @@ describe('rx-promises-async', () => {
     expect(signal?.aborted).toBe(true)
   })
 
-  test('nach unsubscribe kommt kein Wert und kein Fehler mehr an', async () => {
+  test('after unsubscribe neither a value nor an error arrives', async () => {
     const events: string[] = []
     const subscription = fromAbortable(slowTask(5, 'zu spät')).subscribe({
       next: (value) => events.push(value),
@@ -49,14 +49,14 @@ describe('rx-promises-async', () => {
     expect(events).toEqual([])
   })
 
-  test('ein Fehler der Task kommt als error an', async () => {
+  test('an error of the task arrives as error', async () => {
     const failing = fromAbortable(async () => {
       throw new Error('kaputt')
     })
     await expect(firstValueFrom(failing)).rejects.toThrow('kaputt')
   })
 
-  test('firstThree holt drei Preise und meldet sich dann ab', async () => {
+  test('firstThree fetches three prices and then unsubscribes', async () => {
     const prices = new Subject<number>()
     const result = firstThree(prices)
     prices.next(10)
@@ -66,7 +66,7 @@ describe('rx-promises-async', () => {
     await expect(result).resolves.toEqual([10, 11, 12])
   })
 
-  test('firstThree funktioniert auch mit einer endlosen Quelle', async () => {
+  test('firstThree also works with an endless source', async () => {
     await expect(firstThree(interval(1).pipe(map((n) => 100 + n)))).resolves.toEqual([100, 101, 102])
   })
 })

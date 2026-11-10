@@ -1,23 +1,23 @@
 /**
- * Lektion rx-subscription-cleanup: Jede Subscription braucht ein Ende
+ * Lesson rx-subscription-cleanup: Every subscription needs an end
  *
- * Aufgabe: Bau eine Komponente mit drei Subscriptions auf interval und
- * fromEvent und beende alle über ein gemeinsames destroy$-Signal mit takeUntil.
+ * Task: Build a component with three subscriptions to interval and
+ * fromEvent, and end all of them via a shared destroy$ signal with takeUntil.
  *
- * Die Komponente bekommt ein window (EventTarget) und eine render-Funktion.
- * - Uhr:      interval(1_000)  -> render('tick 0'), render('tick 1'), ...
+ * The component gets a window (EventTarget) and a render function.
+ * - Clock:    interval(1_000)  -> render('tick 0'), render('tick 1'), ...
  * - Autosave: interval(5_000)  -> render('autosave 0'), ...
  * - Layout:   fromEvent(window, 'resize') -> render('resize')
- * Jede Subscription meldet beim Aufräumen per finalize render('<name> gestoppt'),
- * also 'tick gestoppt', 'autosave gestoppt' und 'resize gestoppt'.
- * destroy() beendet alle drei auf einmal.
+ * Every subscription reports on cleanup via finalize render('<name> gestoppt'),
+ * so 'tick gestoppt', 'autosave gestoppt', and 'resize gestoppt'.
+ * destroy() ends all three at once.
  */
 
 export type Component = { destroy: () => void }
 
 export const mountComponent = (window: EventTarget, render: (line: string) => void): Component => {
   // TODO: const destroy$ = new Subject<void>()
-  // TODO: drei Subscriptions mit finalize(...) und takeUntil(destroy$) als letztem Operator
-  // TODO: destroy() ruft destroy$.next() und destroy$.complete() auf
+  // TODO: three subscriptions with finalize(...) and takeUntil(destroy$) as the last operator
+  // TODO: destroy() calls destroy$.next() and destroy$.complete()
   throw new Error('TODO: mountComponent')
 }

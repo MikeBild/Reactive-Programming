@@ -6,13 +6,13 @@ import { averagePer, liveValue, sensor$ } from './index.js'
 const createScheduler = () => new TestScheduler((actual, expected) => expect(actual).toEqual(expected))
 
 describe('rx-time-backpressure', () => {
-  test('der Sensor liefert tausend Werte pro Sekunde', () => {
+  test('the sensor emits a thousand values per second', () => {
     createScheduler().run(({ expectObservable }) => {
       expectObservable(sensor$(1_000, (n) => n).pipe(take(1_000), count())).toBe('1000ms (a|)', { a: 1_000 })
     })
   })
 
-  test('der Sensor liest den n-ten Wert mit read(n)', () => {
+  test('the sensor reads the n-th value with read(n)', () => {
     createScheduler().run(({ expectObservable }) => {
       expectObservable(sensor$(10, (n) => n * 2).pipe(take(3))).toBe('100ms a 99ms b 99ms (c|)', {
         a: 0,
@@ -22,23 +22,23 @@ describe('rx-time-backpressure', () => {
     })
   })
 
-  test('liveValue liefert am Fensterende nur den neuesten Wert', () => {
+  test('liveValue emits only the newest value at the end of the window', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const source$ = cold('ab-c-------|', { a: 1, b: 2, c: 3 })
       expectObservable(liveValue(source$, 5)).toBe('-----c-----|', { c: 3 })
     })
   })
 
-  test('averagePer liefert den Durchschnitt pro Fenster und lässt leere Fenster weg', () => {
+  test('averagePer emits the average per window and skips empty windows', () => {
     createScheduler().run(({ cold, expectObservable }) => {
       const source$ = cold('ab-c--d-e--------|', { a: 1, b: 3, c: 5, d: 10, e: 20 })
       expectObservable(averagePer(source$, 5)).toBe('-----x----y------|', { x: 3, y: 15 })
     })
   })
 
-  test('aus tausend Werten pro Sekunde wird ein Durchschnitt pro Sekunde', () => {
+  test('a thousand values per second become one average per second', () => {
     createScheduler().run(({ expectObservable }) => {
-      // 2.500 Werte in 2,5 Sekunden: zwei volle Fenster, den Rest liefert bufferTime beim complete
+      // 2,500 values in 2.5 seconds: two full windows, bufferTime delivers the rest on complete
       const averages$ = averagePer(sensor$(1_000, () => 50).pipe(take(2_500)))
       expectObservable(averages$).toBe('1000ms a 999ms a 499ms (a|)', { a: 50 })
     })

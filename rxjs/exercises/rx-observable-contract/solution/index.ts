@@ -8,6 +8,6 @@ export const ticker = (ms: number, count = 5): Observable<number> =>
       if (value === count) subscriber.complete()
     }, ms)
 
-    // Läuft bei complete, error und unsubscribe
+    // Runs on complete, error, and unsubscribe
     return () => clearInterval(id)
   })

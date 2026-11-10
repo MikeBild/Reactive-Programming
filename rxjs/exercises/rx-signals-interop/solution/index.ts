@@ -4,15 +4,15 @@ import { signal, type Signal } from '../signal.js'
 export type Product = { id: string; name: string; priceCents: number; stock: number }
 export type CartItem = { productId: string; quantity: number; priceCents: number }
 
-/** Signal -> Observable: liefert sofort den aktuellen Wert, danach jede Änderung. */
+/** Signal -> Observable: emits the current value immediately, then every change. */
 export const toObservable = <T>(source: Signal<T>): Observable<T> =>
   new Observable<T>((subscriber) => {
     subscriber.next(source.get())
-    // watch gibt die Abmelde-Funktion zurück, sie wird zum Teardown
+    // watch returns the unsubscribe function, it becomes the teardown
     return source.watch((value) => subscriber.next(value))
   })
 
-/** Observable -> Signal: das Signal hält immer den letzten Wert, bis unsubscribe. */
+/** Observable -> Signal: the Signal always holds the last value, until unsubscribe. */
 export const toSignal = <T>(source$: Observable<T>, initialValue: T): { value: Signal<T>; unsubscribe: () => void } => {
   const value = signal(initialValue)
   const subscription = source$.subscribe((next) => value.set(next))
@@ -35,13 +35,13 @@ export const createShopViewModel = (
   searchProducts: (term: string) => Observable<Product[]>,
   debounceMs = 300,
 ): ShopViewModel => {
-  // Zustand mit aktuellem Wert und ohne Zeitlogik: Signals
+  // State with a current value and without time logic: Signals
   const cart = signal<CartItem[]>([])
   const totalCents = signal(0)
   const stopTotal = cart.watch((items) => totalCents.set(sumCents(items)))
   const term = signal('')
 
-  // Zeit, Abbruch und Duplikate: Observable. Das Ergebnis geht als Signal mit Startwert zurück.
+  // Time, cancellation, and duplicates: Observable. The result goes back as a Signal with an initial value.
   const results = toSignal(
     toObservable(term).pipe(
       debounceTime(debounceMs),

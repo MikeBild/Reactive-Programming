@@ -2,7 +2,7 @@ import { distinctUntilChanged, filter, map, pipe, scan, type OperatorFunction } 
 
 export type Message<P = unknown> = { type: string; id: string; payload: P }
 
-/** Lässt nur Nachrichten eines Typs durch, ohne direkt wiederholte ids, und liefert deren Payload. */
+/** Lets only messages of one type through, without directly repeated ids, and emits their payload. */
 export const ofType = <P>(type: string): OperatorFunction<Message, P> =>
   pipe(
     filter((message) => message.type === type),
@@ -10,7 +10,7 @@ export const ofType = <P>(type: string): OperatorFunction<Message, P> =>
     map((message) => message.payload as P),
   )
 
-/** Zählt die Nachrichten eines Typs ohne Duplikate, gibt nach jeder Nachricht den Zwischenstand aus. */
+/** Counts the messages of one type without duplicates, emits the running count after every message. */
 export const countOfType = (type: string): OperatorFunction<Message, number> =>
   pipe(
     ofType(type),

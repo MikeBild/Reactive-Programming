@@ -1,6 +1,6 @@
 /**
- * Eine simulierte WebSocket-Verbindung. Sie zählt, wie oft sie geöffnet
- * und geschlossen wird, und verteilt Nachrichten an offene Verbindungen.
+ * A simulated WebSocket connection. It counts how often it is opened
+ * and closed, and distributes messages to open connections.
  */
 export type Connection = {
   onMessage: (listener: (message: string) => void) => void

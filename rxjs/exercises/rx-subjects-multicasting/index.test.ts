@@ -3,7 +3,7 @@ import { FakeSocketServer } from './fake-socket.js'
 import { CartStore, connectSocket, sharedSocket } from './index.js'
 
 describe('rx-subjects-multicasting', () => {
-  test('connectSocket öffnet erst beim subscribe und schließt beim unsubscribe', () => {
+  test('connectSocket only opens on subscribe and closes on unsubscribe', () => {
     const server = new FakeSocketServer()
     const socket$ = connectSocket(server)
     expect(server.opened).toBe(0)
@@ -18,7 +18,7 @@ describe('rx-subjects-multicasting', () => {
     expect(server.closed).toBe(1)
   })
 
-  test('ohne share öffnet jeder Subscriber eine eigene Verbindung', () => {
+  test('without share every subscriber opens its own connection', () => {
     const server = new FakeSocketServer()
     const socket$ = connectSocket(server)
     socket$.subscribe()
@@ -26,7 +26,7 @@ describe('rx-subjects-multicasting', () => {
     expect(server.openConnections).toBe(2)
   })
 
-  test('der Letzte macht das Licht aus', () => {
+  test('the last one turns off the light', () => {
     const server = new FakeSocketServer()
     const socket$ = sharedSocket(server)
     const a: string[] = []
@@ -50,7 +50,7 @@ describe('rx-subjects-multicasting', () => {
     expect(b).toEqual(['kurs 1', 'kurs 2'])
   })
 
-  test('nach dem Licht-aus öffnet der nächste Subscriber eine neue Verbindung', () => {
+  test('after the light is off, the next subscriber opens a new connection', () => {
     const server = new FakeSocketServer()
     const socket$ = sharedSocket(server)
 
@@ -61,7 +61,7 @@ describe('rx-subjects-multicasting', () => {
     expect(server.openConnections).toBe(1)
   })
 
-  test('CartStore liefert späten Subscribern sofort den aktuellen Warenkorb', () => {
+  test('CartStore gives late subscribers the current cart immediately', () => {
     const cart = new CartStore()
     cart.add('Buch')
     cart.add('Stift')
@@ -74,7 +74,7 @@ describe('rx-subjects-multicasting', () => {
     expect(cart.current).toEqual(['Buch', 'Stift', 'Heft'])
   })
 
-  test('CartStore gibt nach außen kein Subject heraus', () => {
+  test('CartStore does not expose a Subject', () => {
     const cart = new CartStore()
     expect('next' in cart.items$).toBe(false)
   })

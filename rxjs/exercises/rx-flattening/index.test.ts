@@ -5,16 +5,16 @@ import { autosave, loginOnClick, searchResults, uploadQueue } from './index.js'
 const createScheduler = () => new TestScheduler((actual, expected) => expect(actual).toEqual(expected))
 
 describe('rx-flattening', () => {
-  test('Suche: ein neuer Begriff bricht die laufende Suche ab', () => {
+  test('search: a new term cancels the running search', () => {
     createScheduler().run(({ hot, cold, expectObservable }) => {
       const term$ = hot('-a-b-------|')
       const search = (term: string) => cold('---r|', { r: [term] })
-      // a startet in Frame 1, b in Frame 3 bricht a ab, Ergebnis für b in Frame 6
+      // a starts in frame 1, b in frame 3 cancels a, result for b in frame 6
       expectObservable(searchResults(term$, search)).toBe('------x----|', { x: ['b'] })
     })
   })
 
-  test('Autosave: speichert alle Änderungen nacheinander in ihrer Reihenfolge', () => {
+  test('autosave: saves all changes one after another in their order', () => {
     createScheduler().run(({ hot, cold, expectObservable, expectSubscriptions }) => {
       const change$ = hot('-ab-------|')
       const saves = { a: cold('---A|'), b: cold('-B|') }
@@ -25,11 +25,11 @@ describe('rx-flattening', () => {
     })
   })
 
-  test('Upload-Queue: höchstens zwei Uploads laufen gleichzeitig', () => {
+  test('upload queue: at most two uploads run at the same time', () => {
     createScheduler().run(({ hot, cold, expectObservable }) => {
       const file$ = hot('-abc|')
       const upload = (file: string) => cold('----u|', { u: `${file} ok` })
-      // a und b starten sofort, c erst, wenn a fertig ist
+      // a and b start immediately, c only when a is done
       expectObservable(uploadQueue(file$, upload, 2)).toBe('-----xy---z|', {
         x: 'a ok',
         y: 'b ok',
@@ -38,7 +38,7 @@ describe('rx-flattening', () => {
     })
   })
 
-  test('Login: Klicks während eines laufenden Logins werden ignoriert', () => {
+  test('login: clicks during a running login are ignored', () => {
     createScheduler().run(({ hot, cold, expectObservable }) => {
       const click$ = hot('-aa-a-----a--|')
       let calls = 0

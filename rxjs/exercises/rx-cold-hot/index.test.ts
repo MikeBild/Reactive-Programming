@@ -4,7 +4,7 @@ import { coldUser$, sharedUser$, type User } from './index.js'
 
 const ada: User = { id: '42', name: 'Ada' }
 
-/** Ein Fake-Backend ohne Mock-Library: zählt Aufrufe und antwortet erst, wenn der Test es sagt. */
+/** A fake backend without a mock library: counts calls and only answers when the test says so. */
 const createBackend = () => {
   const respond = new Subject<void>()
   let calls = 0
@@ -23,13 +23,13 @@ const createBackend = () => {
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe('rx-cold-hot', () => {
-  test('cold: ohne subscribe läuft kein Request', () => {
+  test('cold: no request runs without subscribe', () => {
     const backend = createBackend()
     coldUser$(backend.loadUser, () => {})
     expect(backend.calls).toBe(0)
   })
 
-  test('cold: zwei Subscriber lösen zwei Requests aus', async () => {
+  test('cold: two subscribers trigger two requests', async () => {
     const backend = createBackend()
     let requests = 0
     const user$ = coldUser$(backend.loadUser, () => requests++)
@@ -47,7 +47,7 @@ describe('rx-cold-hot', () => {
     expect(sidebar).toEqual([ada])
   })
 
-  test('hot mit share: zwei Subscriber teilen sich einen Request', async () => {
+  test('hot with share: two subscribers share one request', async () => {
     const backend = createBackend()
     let requests = 0
     const user$ = sharedUser$(backend.loadUser, () => requests++)
@@ -65,7 +65,7 @@ describe('rx-cold-hot', () => {
     expect(sidebar).toEqual([ada])
   })
 
-  test('hot mit share: nach complete startet ein neuer Subscriber einen neuen Request', async () => {
+  test('hot with share: after complete, a new subscriber starts a new request', async () => {
     const backend = createBackend()
     const user$ = sharedUser$(backend.loadUser, () => {})
 

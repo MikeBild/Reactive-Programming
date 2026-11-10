@@ -1,12 +1,12 @@
 /**
- * Lektion rx-push-pull: Push statt Pull
+ * Lesson rx-push-pull: Push instead of pull
  *
- * Aufgabe: Schreib einen Generator für die Zahlen eins bis zehn und ein
- * Observable mit denselben Werten. Vergleiche, wer jeweils den nächsten Wert
- * anstößt.
+ * Task: Write a generator for the numbers one to ten and an
+ * Observable with the same values. Compare who triggers the next
+ * value in each case.
  *
- * Beide Producer rufen onProduce(n) auf, bevor sie den Wert n herausgeben.
- * So sieht der Test, wann ein Wert entsteht.
+ * Both producers call onProduce(n) before they hand out the value n.
+ * That way the test sees when a value is created.
  */
 import { Observable } from 'rxjs'
 
@@ -14,16 +14,16 @@ export type OnProduce = (value: number) => void
 
 const noop: OnProduce = () => {}
 
-/** Pull: Der Consumer holt jeden Wert mit next(). */
+/** Pull: the consumer fetches every value with next(). */
 export function* countTo(max: number, onProduce: OnProduce = noop): Generator<number> {
-  // TODO: Liefere 1 bis max. Ruf vor jedem yield onProduce(n) auf.
+  // TODO: Yield 1 to max. Call onProduce(n) before every yield.
   throw new Error('TODO: countTo')
 }
 
-/** Push: Der Producer schickt alle Werte, sobald jemand subscribe aufruft. */
+/** Push: the producer sends all values as soon as someone calls subscribe. */
 export const countTo$ = (max: number, onProduce: OnProduce = noop): Observable<number> =>
   new Observable<number>((subscriber) => {
-    // TODO: Schick 1 bis max per subscriber.next und melde danach complete.
-    //       Ruf vor jedem next onProduce(n) auf.
+    // TODO: Send 1 to max via subscriber.next and then report complete.
+    //       Call onProduce(n) before every next.
     subscriber.error(new Error('TODO: countTo$'))
   })
