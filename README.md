@@ -61,9 +61,10 @@ The order follows the agenda of the workshop.
 
 ## Workshop and slides
 
-- Workshop: [“Reactive programming with RxJS”](https://workshops.mikebild.dev/w/reactive-programming/remote/)
-- Slides: [slides.mikebild.dev/introduction-reactive-programming](https://slides.mikebild.dev/introduction-reactive-programming.html)
-- PDF: [slides.mikebild.dev/introduction-reactive-programming.pdf](https://slides.mikebild.dev/introduction-reactive-programming.pdf)
+- Workshop (held in German): [“Reactive programming with RxJS”](https://workshops.mikebild.dev/w/reactive-programming/remote/)
+- Slides: [slides.mikebild.dev/introduction-reactive-programming.en](https://slides.mikebild.dev/introduction-reactive-programming.en.html)
+- PDF: [introduction-reactive-programming.en.pdf](https://objects.upraft.mikebild.info/site-media/mikebild/decks/introduction-reactive-programming/introduction-reactive-programming.en.pdf)
+- Video: [introduction-reactive-programming.en.mp4](https://objects.upraft.mikebild.info/site-media/mikebild/decks/introduction-reactive-programming/introduction-reactive-programming.en.mp4)
 
 ## Archive
 
